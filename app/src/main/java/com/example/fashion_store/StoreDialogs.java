@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class StoreDialogs {
 

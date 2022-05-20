@@ -10,12 +10,15 @@
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/drawable/ic_baseline_mail_outline_24.xml" value="0.1705" />
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/drawable/layout_background.xml" value="0.1605" />
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/drawable/layout_background_full.xml" value="0.1705" />
+        <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/drawable/nav_button_background.xml" value="0.1905" />
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/activity_forget_password.xml" value="0.18229166666666666" />
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/activity_login.xml" value="0.22" />
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/activity_main.xml" value="0.18238665971860343" />
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/activity_register.xml" value="0.18229166666666666" />
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/activity_splash.xml" value="0.16847826086956522" />
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/activity_store.xml" value="0.18229166666666666" />
+        <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/activity_store_main_page.xml" value="0.25" />
+        <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/activity_store_search_products.xml" value="0.18229166666666666" />
       </map>
     </option>
   </component>

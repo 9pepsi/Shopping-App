@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-public class SplashActivity extends AppCompatActivity {
+public class StartActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,7 +15,7 @@ public class SplashActivity extends AppCompatActivity {
         //Splash Screen duration
         int msDelay = 1000;
         new Handler().postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+            startActivity(new Intent(StartActivity.this, LoginActivity.class));
             finish();
         }, msDelay);
     }

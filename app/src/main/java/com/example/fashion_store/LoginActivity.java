@@ -73,13 +73,12 @@ public class LoginActivity extends AppCompatActivity {
                     loginPrefsEditor.putBoolean("saveLogin",true);
                     loginPrefsEditor.putString("loginEmail",Email);
                     loginPrefsEditor.putString("loginPW",Pass);
-                    loginPrefsEditor.apply();
                 }else{
                     loginPrefsEditor.clear();
-                    loginPrefsEditor.apply();
                 }
+                loginPrefsEditor.apply();
                 Toast.makeText(LoginActivity.this, "Logged in!", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(LoginActivity.this, StoreActivity.class);
+                Intent i = new Intent(LoginActivity.this, StoreMainPageActivity.class);
                 startActivity(i);
 
             }else{
