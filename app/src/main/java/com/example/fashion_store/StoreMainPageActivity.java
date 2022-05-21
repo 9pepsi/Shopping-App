@@ -1,28 +1,45 @@
 package com.example.fashion_store;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
-import com.denzcoskun.imageslider.ImageSlider;
-import com.denzcoskun.imageslider.models.SlideModel;
+import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class StoreMainPageActivity extends AppCompatActivity {
-    ImageSlider imageSlider;
 
+    BottomNavigationView bottomNavigationView;
+
+    FeaturedPageFragment featuredPF = new FeaturedPageFragment();
+    CategoriesPageFragment categoriesPF = new CategoriesPageFragment();
+    CartPageFragment cartPF = new CartPageFragment();
+    ProfilePageFragment profilePF = new ProfilePageFragment();
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_main_page);
 
-//        imageSlider = findViewById(R.id.slider);
-//        List<SlideModel> slideModels = new ArrayList<>();
-//        slideModels.add(new SlideModel("https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a78bc4896a3e9ad7800abcec6_9366/Ultraboost_22_Shoes_Black_GZ0127_01_standard.jpg"));
-//        slideModels.add(new SlideModel("https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/ccfbacc1e64547029d9cad7800abfd6f_9366/Ultraboost_22_Shoes_Black_GZ0127_41_detail.jpg"));
-//        slideModels.add(new SlideModel("https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/8d63a3ef05e746a4abc2ad7800abd65f_9366/Ultraboost_22_Shoes_Black_GZ0127_06_standard.jpg"));
-//        imageSlider.setImageList(slideModels, true);
+        bottomNavigationView =findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()){
+                case R.id.main_page:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.store_fragment, featuredPF).commit();
+                    return true;
+                case R.id.categories_page:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.store_fragment, categoriesPF).commit();
+                    return true;
+                case R.id.cart_page:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.store_fragment, cartPF).commit();
+                    return true;
+                case R.id.profile_page:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.store_fragment, profilePF).commit();
+                    return true;
+            }
+            return false;
+        });
+        bottomNavigationView.setSelectedItemId(R.id.main_page);
+
     }
 }
