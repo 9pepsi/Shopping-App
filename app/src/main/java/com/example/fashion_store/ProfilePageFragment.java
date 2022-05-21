@@ -21,7 +21,7 @@ public class ProfilePageFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TransitionInflater inflater = TransitionInflater.from(requireContext());
-        setExitTransition(inflater.inflateTransition(R.transition.fade));
+        setExitTransition(inflater.inflateTransition(R.transition.slide_right));
         setEnterTransition(inflater.inflateTransition(R.transition.slide_right));
     }
 

@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
             //check if user
             boolean isUser = false;
             try {
-                isUser = new MySQLHelper().loginUser(Email, Pass);
+                isUser = new DBHelper().loginUser(Email, Pass);
             } catch (SQLException sqlException) {
                 sqlException.printStackTrace();
             }

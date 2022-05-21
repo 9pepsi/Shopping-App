@@ -61,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
             boolean registerComplete = false;
             //submit to database
             try {
-                MySQLHelper db = new MySQLHelper();
+                DBHelper db = new DBHelper();
                 registerComplete = db.registerUser(Name, Email, Password, DOB);
             } catch (SQLException sqlException) {
                 sqlException.printStackTrace();

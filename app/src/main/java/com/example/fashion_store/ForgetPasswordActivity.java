@@ -32,7 +32,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
                 Toast.makeText(this, "Passwords do not match.", Toast.LENGTH_SHORT).show();
             }else{
                 try {
-                    boolean isReset = new MySQLHelper().resetPassword(email, newPass);
+                    boolean isReset = new DBHelper().resetPassword(email, newPass);
                     if(isReset){
                         new StoreDialogs().backToLoginDialog(this,"Password Reset Successfully!");
                     }else {Toast.makeText(this, "Something went wrong.", Toast.LENGTH_SHORT).show();

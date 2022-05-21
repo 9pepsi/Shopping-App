@@ -8,14 +8,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class MySQLHelper {
-    private static final String URL = "jdbc:mysql://vruqzrwm0lfv.eu-central-2.psdb.cloud/fashion_store?sslMode=VERIFY_IDENTITY";
-    private static final String USER = "r5a8eg0rld1l";
-    private static final String PASSWORD = "pscale_pw_FOkW87ma5Ti7znLUNk71_HfmuR9U2fdiWsVKy7kMk6Y";
+public class DBHelper {
+    private static final String URL = "jdbc:mysql://3tk9kwwdm5kp.eu-central-1.psdb.cloud/dfdfdfdfd?sslMode=VERIFY_IDENTITY";
+    private static final String USER = "qk24dlo9ghvl";
+    private static final String PASSWORD = "pscale_pw_Y7ql3zxhKKXpPXCjAfQJ4_v--4FEBTLSKiWNa56rhYY";
     private Connection conn;
     private PreparedStatement preparedStmt;
 
-    MySQLHelper() throws SQLException {
+    DBHelper() throws SQLException {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -76,6 +76,31 @@ public class MySQLHelper {
         this.closeConnection();
 
         return isReset;
+    }
+
+    public String[] displayProductData(String productName) throws SQLException {
+        //query
+        String query = "SELECT * " +
+                "FROM products " +
+                "WHERE product_name = ?";
+        //prepare statement
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, productName);
+        //execute
+        preparedStmt.execute();
+        //get result set
+        ResultSet rs = preparedStmt.getResultSet();
+        //product data
+        String[] productData = new String[5];
+        while (rs.next()){
+            productData[0] = rs.getString("product_name");
+            productData[1] = rs.getString("product_price");
+            productData[2] = rs.getString("product_img");
+            productData[3] = rs.getString("product_desc");
+            productData[4] = rs.getString("product_category");
+        }
+        this.closeConnection();
+        return productData;
     }
 
     public void closeConnection() throws SQLException {
