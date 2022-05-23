@@ -27,4 +27,16 @@
     <string name="featured_products">FEATURED PRODUCTS</string>
     <string name="hot_logo">hot_logo</string>
     <string name="product_img">product_img</string>
+    <string name="category_image">category image</string>
+    <string name="category_category_name">Category: {Category Name}</string>
+    <string name="price_price">Price: {Price}</string>
+    <string name="add_to_cart">ADD TO CART</string>
+    <string name="product_page_back_bt">product_page_back_bt</string>
+    <string name="product_image_view">product_image_view</string>
+    <string name="description_description">Description: {Description}</string>
+    <string name="quantity">Quantity:</string>
+    <string name="_1">1</string>
+    <string name="search_query">{SEARCH QUERY}</string>
+    <string name="dec_button">dec_button</string>
+    <string name="inc_button">inc_button</string>
 </resources>

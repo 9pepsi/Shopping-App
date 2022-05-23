@@ -9,15 +9,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DBHelper {
-    private static final String URL = "jdbc:mysql://3tk9kwwdm5kp.eu-central-1.psdb.cloud/dfdfdfdfd?sslMode=VERIFY_IDENTITY";
-    private static final String USER = "qk24dlo9ghvl";
-    private static final String PASSWORD = "pscale_pw_Y7ql3zxhKKXpPXCjAfQJ4_v--4FEBTLSKiWNa56rhYY";
+    private static final String URL = "jdbc:mysql://d7mxitbtvngw.eu-central-1.psdb.cloud/fashion?sslMode=VERIFY_IDENTITY";
+    private static final String USER = "hvdzcjfk0lpx";
+    private static final String PASSWORD = "pscale_pw_D6V_mzODGFJ80_9XgOZkjJ0fCIZXjbwSD9JFZ1OLr6M";
     private Connection conn;
     private PreparedStatement preparedStmt;
 
     DBHelper() throws SQLException {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+        //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        //StrictMode.setThreadPolicy(policy);
         conn = DriverManager.getConnection(URL, USER, PASSWORD);
     }
 

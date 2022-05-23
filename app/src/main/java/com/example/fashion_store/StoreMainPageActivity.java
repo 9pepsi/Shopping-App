@@ -1,7 +1,10 @@
 package com.example.fashion_store;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class StoreMainPageActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
+    SearchView mainPageSearch;
 
     FeaturedPageFragment featuredPF = new FeaturedPageFragment();
     CategoriesPageFragment categoriesPF = new CategoriesPageFragment();
@@ -20,7 +24,7 @@ public class StoreMainPageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_main_page);
-
+        //fragment select
         bottomNavigationView =findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()){
@@ -40,6 +44,9 @@ public class StoreMainPageActivity extends AppCompatActivity {
             return false;
         });
         bottomNavigationView.setSelectedItemId(R.id.main_page);
+        //search bar
+        mainPageSearch = findViewById(R.id.main_page_search);
+
 
     }
 }

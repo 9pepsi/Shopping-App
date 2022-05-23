@@ -1,19 +1,22 @@
 package com.example.fashion_store;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.models.SlideModel;
@@ -21,6 +24,7 @@ import com.squareup.picasso.Picasso;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FeaturedPageFragment extends Fragment {
@@ -44,6 +48,9 @@ public class FeaturedPageFragment extends Fragment {
     TextView productPrice3;
     CardView p3CardView;
     String[] p3Data;
+
+    ProgressDialog progressDialog;
+
 
     public FeaturedPageFragment() {
         // Required empty public constructor
@@ -78,53 +85,76 @@ public class FeaturedPageFragment extends Fragment {
         slideModels.add(new SlideModel("https://itsuitsfashion.com/wp-content/uploads/2020/04/placeholder-header.jpg"));
         imageSlider.setImageList(slideModels, true);
         //featured products
-            //product1
-        try {
-            p1Data = ShopHelper.displayFeaturedPageProducts("Apple Watch", productName1, productPrice1, productImg1);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            //display products
+        class showFeaturedProductsTask extends AsyncTask<String, Void, String[][]> {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                progressDialog = ProgressDialog.show(view.getContext(), "", "Loading Products...");
+
+            }
+
+            @Override
+            protected String[][] doInBackground(String... productName) {
+                String[][] pData = new String[3][5];
+                try {
+                    pData[0] = new DBHelper().displayProductData(productName[0]);
+                    pData[1] = new DBHelper().displayProductData(productName[1]);
+                    pData[2] = new DBHelper().displayProductData(productName[2]);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                return pData;
+            }
+
+            @Override
+            protected void onPostExecute(String[][] productData) {
+
+                    productName1.setText(productData[0][0]);
+                    productPrice1.setText(productData[0][1].concat("$"));
+                    Picasso.get().load(Uri.parse(productData[0][2])).into(productImg1);
+                    p1Data = Arrays.copyOf(productData[0],5);
+
+                    productName2.setText(productData[1][0]);
+                    productPrice2.setText(productData[1][1].concat("$"));
+                    Picasso.get().load(Uri.parse(productData[1][2])).into(productImg2);
+                    p2Data = Arrays.copyOf(productData[1],5);
+
+                    productName3.setText(productData[2][0]);
+                    productPrice3.setText(productData[2][1].concat("$"));
+                    Picasso.get().load(Uri.parse(productData[2][2])).into(productImg3);
+                    p3Data = Arrays.copyOf(productData[2],5);
+
+
+                progressDialog.dismiss();
+            }
         }
+        new showFeaturedProductsTask().execute("Apple Watch","Placeholder Shirt","Timberland Boots");
+
+
             //product 1 product page
         p1CardView = view.findViewById(R.id.card_fp1);
-        p1CardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getContext(), ProductPageActivity.class);
-                i.putExtra("product_data", p1Data);
-                startActivity(i);
-            }
-        });
-            //product 2
-        try {
-            p2Data = ShopHelper.displayFeaturedPageProducts("Placeholder Shirt", productName2, productPrice2, productImg2);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-            //product 2 product page
         p2CardView = view.findViewById(R.id.card_fp2);
-        p2CardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getContext(), ProductPageActivity.class);
-                i.putExtra("product_data", p2Data);
-                startActivity(i);
-            }
-        });
-        //product 3
-        try {
-            p3Data = ShopHelper.displayFeaturedPageProducts("Timberland Boots", productName3, productPrice3, productImg3);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        //product 2 product page
         p3CardView = view.findViewById(R.id.card_fp3);
-        p3CardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getContext(), ProductPageActivity.class);
-                i.putExtra("product_data", p3Data);
-                startActivity(i);
-            }
+
+        p1CardView.setOnClickListener(view -> {
+            Intent i = new Intent(getContext(), ProductPageActivity.class);
+            i.putExtra("product_data", p1Data);
+            startActivity(i);
+        });
+
+            //product 2 product page
+        p2CardView.setOnClickListener(view -> {
+            Intent i = new Intent(getContext(), ProductPageActivity.class);
+            i.putExtra("product_data", p2Data);
+            startActivity(i);
+        });
+        //product 3 product page
+        p3CardView.setOnClickListener(view -> {
+            Intent i = new Intent(getContext(), ProductPageActivity.class);
+            i.putExtra("product_data", p3Data);
+            startActivity(i);
         });
         // Inflate the layout for this fragment
         return view;
