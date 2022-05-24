@@ -49,9 +49,22 @@
 
     </Toolbar>
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:background="@drawable/layout_background_full">
+
+        <ListView
+            android:id="@+id/search_product_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/white"
+            android:layout_margin="10dp"
+            android:background="@drawable/layout_background_full"
+            android:padding="10dp"/>
 
 
-
-
+    </RelativeLayout>
 </RelativeLayout>
 
