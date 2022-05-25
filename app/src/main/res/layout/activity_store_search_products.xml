@@ -14,19 +14,17 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme">
 
-        <SearchView
+        <ImageButton
+            android:id="@+id/search_page_search"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:layout_gravity="end"
+            android:layout_margin="20dp"
             android:background="@drawable/button_background"
-            android:backgroundTint="@color/white"
-            android:iconifiedByDefault="true"
-            android:imeOptions="actionSearch"
-            android:queryHint="Search Products" />
+            android:src="@drawable/ic_round_search_24"
+            android:backgroundTint="@color/white"/>
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="wrap_content"
@@ -34,17 +32,16 @@
             android:layout_gravity="center"
             app:cardCornerRadius="20dp">
 
-        <TextView
-            android:id="@+id/store_search_query"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/search_query"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textAlignment="center"
-            android:padding="10dp"
-            />
+            <TextView
+                android:id="@+id/store_search_query"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/search_query"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
         </com.google.android.material.card.MaterialCardView>
 
     </Toolbar>

@@ -1,6 +1,7 @@
 package com.example.fashion_store;
 
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,7 +14,7 @@ import java.sql.SQLException;
 
 public class StoreSearchProductsActivity extends AppCompatActivity {
     TextView searchQuery;
-    String category;
+    String categoryFromIntent;
     ListView productList;
     ProgressDialog progressDialog;
     String[][] productsData;
@@ -82,12 +83,72 @@ public class StoreSearchProductsActivity extends AppCompatActivity {
             }
         }
 
+        class showProductSearchTask extends AsyncTask<String, Void, String[][]>{
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                progressDialog = ProgressDialog.show(StoreSearchProductsActivity.this, "", "Loading Products...");
+            }
+
+            @Override
+            protected String[][] doInBackground(String... query) {
+                productsCount = 0;
+                try {
+                    productsCount = new DBHelper().getSearchProductsCount(query[0]);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                String[][] productsQueryData = new String[productsCount][5];
+                try {
+                    productsQueryData = new DBHelper().displaySearchProducts(query[0]);
+                    productsData = new String[productsQueryData.length][5];
+
+                    for (int i = 0; i < productsQueryData.length; i++){
+                        for (int j = 0; j< productsQueryData[i].length;j++){
+                            productsData[i][j] = productsQueryData[i][j];
+                        }
+                    }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return productsQueryData;
+            }
+
+            @Override
+            protected void onPostExecute(String[][] productsQueryData) {
+                String[] productsName = new String[productsQueryData.length];
+                String[] productPrice = new String[productsQueryData.length];
+                String[] productImage = new String[productsQueryData.length];
+
+                for(int i = 0; i < productsQueryData.length; i++){
+                    productsName[i] = productsQueryData[i][0];
+                    productPrice[i] = productsQueryData[i][1];
+                    productImage[i] = productsQueryData[i][2];
+                }
+
+                CustomProductsList cpl = new CustomProductsList(StoreSearchProductsActivity.this, productsName,
+                        productPrice, productImage);
+                productList.setAdapter(cpl);
+
+                progressDialog.dismiss();
+
+            }
+        }
+
         //get query
+         //query from category page
         Intent i = getIntent();
         if(i.hasExtra("category")){
-            category = i.getStringExtra("category");
-            searchQuery.setText(category);
-            new showCategoryProductsTask().execute(category);
+            categoryFromIntent = i.getStringExtra("category");
+            searchQuery.setText(categoryFromIntent);
+            new showCategoryProductsTask().execute(categoryFromIntent);
+        }
+         //query from search button
+        if (Intent.ACTION_SEARCH.equals(i.getAction())) {
+            String query = i.getStringExtra(SearchManager.QUERY);
+            searchQuery.setText(query);
+            new showProductSearchTask().execute(query);
         }
 
         productList.setOnItemClickListener((adapterView, view, position, l) -> {

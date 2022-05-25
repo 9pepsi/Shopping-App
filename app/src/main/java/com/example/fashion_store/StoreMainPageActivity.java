@@ -1,10 +1,9 @@
 package com.example.fashion_store;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.SearchView;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,12 +12,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class StoreMainPageActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
-    SearchView mainPageSearch;
+    ImageButton mainPageSearch;
 
     FeaturedPageFragment featuredPF = new FeaturedPageFragment();
     CategoriesPageFragment categoriesPF = new CategoriesPageFragment();
     CartPageFragment cartPF = new CartPageFragment();
     ProfilePageFragment profilePF = new ProfilePageFragment();
+
+
     @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +45,11 @@ public class StoreMainPageActivity extends AppCompatActivity {
             return false;
         });
         bottomNavigationView.setSelectedItemId(R.id.main_page);
-        //search bar
+        //search widget
+
+        //search dialog
         mainPageSearch = findViewById(R.id.main_page_search);
+        mainPageSearch.setOnClickListener(view -> onSearchRequested());
 
 
     }

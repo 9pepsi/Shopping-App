@@ -9,9 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DBHelper {
-    private static final String URL = "jdbc:mysql://otp84zuss6qg.eu-central-2.psdb.cloud/fashion?sslMode=VERIFY_IDENTITY";
-    private static final String USER = "jp4sjmeyjemr";
-    private static final String PASSWORD = "pscale_pw_hUW59px-cCm1x3y8HLWqTYoB5ACyMIKZXZ0ncVlLjb8";
+    private static final String URL = "jdbc:mysql://mgmhml45smlt.eu-central-2.psdb.cloud/fashion?sslMode=VERIFY_IDENTITY";
+    private static final String USER = "smtbcgcoeivk";
+    private static final String PASSWORD = "pscale_pw_Q8kop5Zfn8WeWFpj04O7vmZ20DRli8p_J7Lbcqo35jo";
     private Connection conn;
     private PreparedStatement preparedStmt;
 
@@ -104,6 +104,28 @@ public class DBHelper {
         return productData;
     }
 
+    public int getCategoryProductsCount(String productCategory) throws  SQLException {
+        //query
+        String sql = "SELECT count(*) " +
+                "FROM products " +
+                "WHERE product_category = ? " ;
+        //prepare statement
+        preparedStmt = conn.prepareStatement(sql);
+        preparedStmt.setString(1, productCategory);
+        //execute
+        preparedStmt.execute();
+        //get result set
+        ResultSet rs = preparedStmt.getResultSet();
+        rs.next();
+        //get product count
+        int count = rs.getInt(1);
+        //close
+        rs.close();
+        this.closeConnection();
+
+        return count;
+    }
+
     public String[][] displayCategoryProducts(String productCategory) throws SQLException {
         //query
         String sql = "SELECT * " +
@@ -137,14 +159,14 @@ public class DBHelper {
 
     }
 
-    public int getCategoryProductsCount(String productCategory) throws  SQLException {
+    public int getSearchProductsCount(String productQuery) throws  SQLException {
         //query
         String sql = "SELECT count(*) " +
                 "FROM products " +
-                "WHERE product_category = ? " ;
+                "WHERE product_name LIKE ? " ;
         //prepare statement
         preparedStmt = conn.prepareStatement(sql);
-        preparedStmt.setString(1, productCategory);
+        preparedStmt.setString(1, "%" + productQuery + "%");
         //execute
         preparedStmt.execute();
         //get result set
@@ -158,6 +180,40 @@ public class DBHelper {
 
         return count;
     }
+
+    public String[][] displaySearchProducts(String productQuery) throws SQLException {
+        //query
+        String sql = "SELECT * " +
+                "FROM products " +
+                "WHERE product_name LIKE ? " +
+                "ORDER BY product_name ASC";
+        //prepare statement
+        preparedStmt = conn.prepareStatement(sql);
+        preparedStmt.setString(1, "%" + productQuery + "%");
+        //execute
+        preparedStmt.execute();
+        //get result set
+        ResultSet rs = preparedStmt.getResultSet();
+        //get product count
+        int count = new DBHelper().getCategoryProductsCount(productQuery);
+        //get products data
+        String[][] productData = new String[count][5];
+        int i = 0;
+        while (rs.next()) {
+            productData[i][0] = rs.getString("product_name");
+            productData[i][1] = rs.getString("product_price");
+            productData[i][2] = rs.getString("product_img");
+            productData[i][3] = rs.getString("product_desc");
+            productData[i][4] = rs.getString("product_category");
+            i++;
+        }
+
+        rs.close();
+        this.closeConnection();
+        return productData;
+
+    }
+
 
     public void closeConnection() throws SQLException {
         conn.close();

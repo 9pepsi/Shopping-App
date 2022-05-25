@@ -11,6 +11,11 @@
         android:roundIcon="@drawable/shop"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value="com.example.fashion_store.StoreSearchProductsActivity" />
+
         <activity
             android:name=".ProductPageActivity"
             android:exported="false" />
@@ -21,36 +26,35 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-
             <meta-data android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-
         </activity>
 
         <activity
             android:name=".StoreMainPageActivity"
             android:exported="true">
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value="com.example.fashion_store.StoreSearchProductsActivity" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ForgetPasswordActivity"
             android:exported="false" />
+
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
+
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
+
         <activity
             android:name=".StartActivity"
             android:exported="false">
+
 
             <!-- return intent launcher here -->
         </activity>
