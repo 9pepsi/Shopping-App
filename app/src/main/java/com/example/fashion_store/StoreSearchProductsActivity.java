@@ -2,6 +2,7 @@ package com.example.fashion_store;
 
 import android.app.ProgressDialog;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 
 import java.sql.SQLException;
 
@@ -19,6 +21,7 @@ public class StoreSearchProductsActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     String[][] productsData;
     int productsCount;
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +164,11 @@ public class StoreSearchProductsActivity extends AppCompatActivity {
             startActivity(intent);
 
         });
+
+        //search widget
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = findViewById(R.id.search_page_widget_search);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
 
 

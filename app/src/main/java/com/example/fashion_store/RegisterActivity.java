@@ -1,7 +1,9 @@
 package com.example.fashion_store;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,9 +23,39 @@ public class RegisterActivity extends AppCompatActivity {
     EditText userPassword;
     EditText userBirthday;
     int mYear, mMonth, mDay;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        class registerUserTask extends AsyncTask<String, Void, Boolean>{
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                progressDialog = ProgressDialog.show(RegisterActivity.this, "", "Signing up...");
+            }
+
+            @Override
+            protected Boolean doInBackground(String... userData) {
+                boolean registerComplete = false;
+                try {
+                    registerComplete = new DBHelper().registerUser(userData[0], userData[1], userData[2], userData[3]);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return registerComplete;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean registerComplete) {
+                progressDialog.dismiss();
+
+                if(registerComplete){
+                    new StoreDialogs().backToLoginDialog(RegisterActivity.this,"Registration Complete!").show();
+                }else{
+                    Toast.makeText(RegisterActivity.this, "Something went wrong.", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         //declare vars
@@ -58,20 +90,9 @@ public class RegisterActivity extends AppCompatActivity {
             String Email = userEmail.getText().toString();
             String Password = userPassword.getText().toString();
             String DOB = userBirthday.getText().toString();
-            boolean registerComplete = false;
-            //submit to database
-            try {
-                DBHelper db = new DBHelper();
-                registerComplete = db.registerUser(Name, Email, Password, DOB);
-            } catch (SQLException sqlException) {
-                sqlException.printStackTrace();
-            }
-            //check if registration went through
-            if(registerComplete){
-                new StoreDialogs().backToLoginDialog(this,"Registration Complete!").show();
-            }else{
-                Toast.makeText(RegisterActivity.this, "Something went wrong.", Toast.LENGTH_LONG).show();
-            }
+            //register user
+            new registerUserTask().execute(Name, Email, Password, DOB);
+
         });
     }
 }

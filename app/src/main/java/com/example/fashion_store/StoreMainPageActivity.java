@@ -1,11 +1,14 @@
 package com.example.fashion_store;
 
 import android.annotation.SuppressLint;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -18,6 +21,8 @@ public class StoreMainPageActivity extends AppCompatActivity {
     CategoriesPageFragment categoriesPF = new CategoriesPageFragment();
     CartPageFragment cartPF = new CartPageFragment();
     ProfilePageFragment profilePF = new ProfilePageFragment();
+
+    SearchView searchView;
 
 
     @SuppressLint("NonConstantResourceId")
@@ -46,10 +51,10 @@ public class StoreMainPageActivity extends AppCompatActivity {
         });
         bottomNavigationView.setSelectedItemId(R.id.main_page);
         //search widget
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = findViewById(R.id.main_page_widget_search);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
-        //search dialog
-        mainPageSearch = findViewById(R.id.main_page_search);
-        mainPageSearch.setOnClickListener(view -> onSearchRequested());
 
 
     }

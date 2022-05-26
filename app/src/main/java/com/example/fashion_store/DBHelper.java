@@ -1,7 +1,5 @@
 package com.example.fashion_store;
 
-import android.os.StrictMode;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,15 +7,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DBHelper {
-    private static final String URL = "jdbc:mysql://mgmhml45smlt.eu-central-2.psdb.cloud/fashion?sslMode=VERIFY_IDENTITY";
-    private static final String USER = "smtbcgcoeivk";
-    private static final String PASSWORD = "pscale_pw_Q8kop5Zfn8WeWFpj04O7vmZ20DRli8p_J7Lbcqo35jo";
+    private static final String URL = "jdbc:mysql://0twdk0tywrk3.eu-central-2.psdb.cloud/fashion?sslMode=VERIFY_IDENTITY";
+    private static final String USER = "woerlhlpnkt9";
+    private static final String PASSWORD = "pscale_pw_hLozsoJu8cB5Go-mTHG5D2ifNn4vZiVQdaAzLaIPjpU";
     private Connection conn;
     private PreparedStatement preparedStmt;
 
     DBHelper() throws SQLException {
-        //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        //StrictMode.setThreadPolicy(policy);
         conn = DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
@@ -41,7 +37,7 @@ public class DBHelper {
 
     public boolean loginUser(String email, String password) throws SQLException {
         //query
-        String query = "SELECT EXISTS(SELECT user_email, user_password FROM fashion_store.auth_login" +
+        String query = "SELECT EXISTS(SELECT user_email, user_password FROM auth_login" +
                 " WHERE user_email = ? AND user_password = ?)";
         //insert values
         preparedStmt = conn.prepareStatement(query);
@@ -78,6 +74,33 @@ public class DBHelper {
         return isReset;
     }
 
+    public String[] getUserData(String email, String password) throws SQLException {
+        //query
+        String query = "SELECT * " +
+                "FROM auth_login " +
+                "WHERE user_email = ? AND user_password = ?";
+        //prepare Statement
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, email);
+        preparedStmt.setString(2, password);
+        //execute
+        preparedStmt.execute();
+        ResultSet rs = preparedStmt.getResultSet();
+        //get data
+        String[] userData = new String[4];
+        while (rs.next()){
+            userData[0] = rs.getString("id");
+            userData[1] = rs.getString("user_email");
+            userData[2] = rs.getString("user_name");
+            userData[3] = rs.getString("user_dob");
+        }
+        rs.close();
+        //close connection
+        this.closeConnection();
+        //return user data
+        return userData;
+    }
+
     public String[] displayProductData(String productName) throws SQLException {
         //query
         String query = "SELECT * " +
@@ -102,6 +125,39 @@ public class DBHelper {
         rs.close();
         this.closeConnection();
         return productData;
+    }
+
+    public String[][] getFeaturedProducts(String productOne, String productTwo, String productThree) throws SQLException{
+        //query
+        String query = "SELECT * " +
+                "FROM products " +
+                "WHERE product_name = ? OR " +
+                "product_name = ? OR " +
+                "product_name = ?";
+        //prepare statement
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, productOne);
+        preparedStmt.setString(2, productTwo);
+        preparedStmt.setString(3, productThree);
+        //execute
+        preparedStmt.execute();
+        //get products
+        ResultSet rs = preparedStmt.getResultSet();
+        String[][] featuredProducts = new String[3][5];
+        int count = 0;
+        while (rs.next()){
+            featuredProducts[count][0] = rs.getString("product_name");
+            featuredProducts[count][1] = rs.getString("product_price");
+            featuredProducts[count][2] = rs.getString("product_img");
+            featuredProducts[count][3] = rs.getString("product_desc");
+            featuredProducts[count][4] = rs.getString("product_category");
+            count++;
+        }
+        rs.close();
+        //close connection
+        this.closeConnection();
+        //return products
+        return featuredProducts;
     }
 
     public int getCategoryProductsCount(String productCategory) throws  SQLException {
@@ -163,10 +219,10 @@ public class DBHelper {
         //query
         String sql = "SELECT count(*) " +
                 "FROM products " +
-                "WHERE product_name LIKE ? " ;
+                "WHERE product_name LIKE CONCAT('%',?,'%') " ;
         //prepare statement
         preparedStmt = conn.prepareStatement(sql);
-        preparedStmt.setString(1, "%" + productQuery + "%");
+        preparedStmt.setString(1, productQuery);
         //execute
         preparedStmt.execute();
         //get result set
@@ -185,17 +241,17 @@ public class DBHelper {
         //query
         String sql = "SELECT * " +
                 "FROM products " +
-                "WHERE product_name LIKE ? " +
+                "WHERE product_name LIKE CONCAT('%',?,'%') " +
                 "ORDER BY product_name ASC";
         //prepare statement
         preparedStmt = conn.prepareStatement(sql);
-        preparedStmt.setString(1, "%" + productQuery + "%");
+        preparedStmt.setString(1, productQuery);
         //execute
         preparedStmt.execute();
         //get result set
         ResultSet rs = preparedStmt.getResultSet();
         //get product count
-        int count = new DBHelper().getCategoryProductsCount(productQuery);
+        int count = new DBHelper().getSearchProductsCount(productQuery);
         //get products data
         String[][] productData = new String[count][5];
         int i = 0;

@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/layout_background_full"
     tools:context=".CartPageFragment">
 
+<ListView
+    android:id="@+id/cart_list"
+    android:layout_width="match_parent"
+    android:layout_height="625dp"
+    android:layout_alignParentTop="true"
+    android:divider="@color/white"
+    android:layout_margin="10dp"
+    android:padding="10dp"/>
 
-</FrameLayout>
+    <Button
+        android:id="@+id/cart_checkout_bt"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/cart_list"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_background"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="CHECKOUT"/>
+
+
+</RelativeLayout>

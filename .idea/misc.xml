@@ -20,9 +20,11 @@
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/activity_store.xml" value="0.18229166666666666" />
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/activity_store_main_page.xml" value="0.2" />
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/activity_store_search_products.xml" value="0.18229166666666666" />
+        <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/cart_page_list_view.xml" value="0.33" />
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/category_page_list_view.xml" value="0.18125" />
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/fragment_cart_page.xml" value="0.18229166666666666" />
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/fragment_categories_page.xml" value="0.18229166666666666" />
+        <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/fragment_empty_cart_page.xml" value="0.2" />
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/fragment_featured_page.xml" value="0.16822916666666668" />
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/fragment_profile_page.xml" value="0.18229166666666666" />
         <entry key="..\:/Users/mj/AndroidStudioProjects/ShoppingApp/app/src/main/res/layout/search_products_list_view.xml" value="0.18229166666666666" />

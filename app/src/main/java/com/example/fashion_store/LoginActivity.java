@@ -1,8 +1,13 @@
 package com.example.fashion_store;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -24,10 +29,59 @@ public class LoginActivity extends AppCompatActivity {
     SharedPreferences loginPrefs;
     SharedPreferences.Editor loginPrefsEditor;
     boolean saveLogin;
+    boolean isUser = false;
+    ProgressDialog progressDialog;
+    String[] userData = new String[4];
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        //login task
+        class userLoginTask extends AsyncTask<String, Void, Boolean>{
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...");
+            }
+
+            @Override
+            protected Boolean doInBackground(String... userCredentials) {
+                try {
+                    isUser = new DBHelper().loginUser(userCredentials[0], userCredentials[1]);
+                    userData = new DBHelper().getUserData(userCredentials[0], userCredentials[1]);
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return isUser;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean isUser) {
+                String Email = loginEmail.getText().toString();
+                String Pass = loginPW.getText().toString();
+                if(isUser){
+                    if(rememberMe.isChecked()){
+                        loginPrefsEditor.putBoolean("saveLogin",true);
+                        loginPrefsEditor.putString("loginEmail",Email);
+                        loginPrefsEditor.putString("loginPW",Pass);
+                    }else{
+                        loginPrefsEditor.clear();
+                    }
+                    loginPrefsEditor.apply();
+                    Toast.makeText(LoginActivity.this, "Logged in!", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(LoginActivity.this, StoreMainPageActivity.class);
+                    i.putExtra("user_data", userData);
+                    startActivity(i);
+
+                }else{
+                    Toast.makeText(LoginActivity.this, "Wrong E-mail or Password.", Toast.LENGTH_LONG).show();
+                }
+
+                progressDialog.dismiss();
+            }
+        }
         //vars
       signUp = findViewById(R.id.signup_page_bt);
       forgetPW = findViewById(R.id.forget_pw_page_bt);
@@ -59,31 +113,9 @@ public class LoginActivity extends AppCompatActivity {
         signIn.setOnClickListener(view -> {
             String Email = loginEmail.getText().toString();
             String Pass = loginPW.getText().toString();
+            String[] userCredentials = {Email, Pass};
             //check if user
-            boolean isUser = false;
-            try {
-                isUser = new DBHelper().loginUser(Email, Pass);
-            } catch (SQLException sqlException) {
-                sqlException.printStackTrace();
-            }
-            //login user and save credentials
-            if(isUser){
-                boolean rememberState = rememberMe.isChecked();
-                if(rememberState){
-                    loginPrefsEditor.putBoolean("saveLogin",true);
-                    loginPrefsEditor.putString("loginEmail",Email);
-                    loginPrefsEditor.putString("loginPW",Pass);
-                }else{
-                    loginPrefsEditor.clear();
-                }
-                loginPrefsEditor.apply();
-                Toast.makeText(LoginActivity.this, "Logged in!", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(LoginActivity.this, StoreMainPageActivity.class);
-                startActivity(i);
-
-            }else{
-                Toast.makeText(LoginActivity.this, "Wrong E-mail or Password.", Toast.LENGTH_LONG).show();
-            }
+            new userLoginTask().execute(userCredentials);
 
         });
 

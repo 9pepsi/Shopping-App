@@ -98,9 +98,7 @@ public class FeaturedPageFragment extends Fragment {
             protected String[][] doInBackground(String... productName) {
                 String[][] pData = new String[3][5];
                 try {
-                    pData[0] = new DBHelper().displayProductData(productName[0]);
-                    pData[1] = new DBHelper().displayProductData(productName[1]);
-                    pData[2] = new DBHelper().displayProductData(productName[2]);
+                    pData = new DBHelper().getFeaturedProducts(productName[0], productName[1], productName[2]);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -110,22 +108,28 @@ public class FeaturedPageFragment extends Fragment {
 
             @Override
             protected void onPostExecute(String[][] productData) {
+                if(productData[0][0] == null){
+                    Toast.makeText(getContext(), "Failed to fetch data.", Toast.LENGTH_LONG).show();
+                }else {
+                    String price1 = productPrice1.getText().toString().replace("{PLACEHOLDER PRICE}", productData[0][1]);
+                    String price2 = productPrice2.getText().toString().replace("{PLACEHOLDER PRICE}", productData[1][1]);
+                    String price3 = productPrice3.getText().toString().replace("{PLACEHOLDER PRICE}", productData[2][1]);
 
                     productName1.setText(productData[0][0]);
-                    productPrice1.setText(productData[0][1].concat("$"));
+                    productPrice1.setText(price1);
                     Picasso.get().load(Uri.parse(productData[0][2])).into(productImg1);
-                    p1Data = Arrays.copyOf(productData[0],5);
+                    p1Data = Arrays.copyOf(productData[0], 5);
 
                     productName2.setText(productData[1][0]);
-                    productPrice2.setText(productData[1][1].concat("$"));
+                    productPrice2.setText(price2);
                     Picasso.get().load(Uri.parse(productData[1][2])).into(productImg2);
-                    p2Data = Arrays.copyOf(productData[1],5);
+                    p2Data = Arrays.copyOf(productData[1], 5);
 
                     productName3.setText(productData[2][0]);
-                    productPrice3.setText(productData[2][1].concat("$"));
+                    productPrice3.setText(price3);
                     Picasso.get().load(Uri.parse(productData[2][2])).into(productImg3);
-                    p3Data = Arrays.copyOf(productData[2],5);
-
+                    p3Data = Arrays.copyOf(productData[2], 5);
+                }
 
                 progressDialog.dismiss();
             }

@@ -32,11 +32,8 @@
 
         <activity
             android:name=".StoreMainPageActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="false">
+
         </activity>
 
         <activity
@@ -53,9 +50,11 @@
 
         <activity
             android:name=".StartActivity"
-            android:exported="false">
-
-
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
             <!-- return intent launcher here -->
         </activity>
     </application>

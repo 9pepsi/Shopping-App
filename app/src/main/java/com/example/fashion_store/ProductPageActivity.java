@@ -86,10 +86,11 @@ public class ProductPageActivity extends AppCompatActivity {
         addToCartBT.setOnClickListener(view -> {
             //Send product data and quantity to cart
             int quantity = Integer.parseInt(productQuantity.getText().toString());
-            Intent i = new Intent(view.getContext(), CartPageFragment.class);
+            Intent i = new Intent(view.getContext(), StoreMainPageActivity.class);
             i.putExtra("product_data", productData);
             i.putExtra("product_quantity", quantity);
             //TODO
+            startActivity(i);
             //CONTINUE SHOPPING OR GO TO CART DIALOG
 
 

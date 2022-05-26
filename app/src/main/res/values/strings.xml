@@ -23,7 +23,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="placeholder_name">{PLACEHOLDER NAME}</string>
-    <string name="placeholder_price">{PLACEHOLDER PRICE}</string>
+    <string name="placeholder_price">{PLACEHOLDER PRICE}$</string>
     <string name="featured_products">FEATURED PRODUCTS</string>
     <string name="hot_logo">hot_logo</string>
     <string name="product_img">product_img</string>
