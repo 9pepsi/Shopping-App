@@ -1,13 +1,11 @@
 package com.example.fashion_store;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -32,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     boolean isUser = false;
     ProgressDialog progressDialog;
     String[] userData = new String[4];
+    static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +98,7 @@ public class LoginActivity extends AppCompatActivity {
           loginPW.setText(loginPrefs.getString("loginPW",""));
           rememberMe.setChecked(true);
       }
+        context = getApplicationContext();
       //to sign up
         signUp.setOnClickListener(view -> {
             Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
@@ -120,5 +120,9 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    public static Context getContext() {
+        return context;
     }
 }

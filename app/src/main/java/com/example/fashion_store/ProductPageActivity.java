@@ -4,16 +4,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import java.sql.SQLException;
 
 public class ProductPageActivity extends AppCompatActivity {
     String[] productData;
@@ -27,11 +33,37 @@ public class ProductPageActivity extends AppCompatActivity {
     ImageButton incQuantity;
     TextView productQuantity;
     Button addToCartBT;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_page);
+        //add to cart task
+        class addToCartTask extends AsyncTask<ProductCart, Void, Void>{
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                progressDialog = ProgressDialog.show(ProductPageActivity.this, "", "Adding to cart...");
+            }
+
+            @Override
+            protected Void doInBackground(ProductCart... productCarts) {
+                try {
+                    new DBHelper().addOrUpdateCart(productCarts[0]);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void unused) {
+                progressDialog.dismiss();
+                Toast.makeText(ProductPageActivity.this, "Added to Cart!", Toast.LENGTH_LONG).show();
+
+            }
+        }
         //get product data
         Intent fromFP = getIntent();
         productData = fromFP.getStringArrayExtra("product_data");
@@ -84,15 +116,13 @@ public class ProductPageActivity extends AppCompatActivity {
         //add to cart
         addToCartBT = findViewById(R.id.product_page_add_to_cart);
         addToCartBT.setOnClickListener(view -> {
-            //Send product data and quantity to cart
-            int quantity = Integer.parseInt(productQuantity.getText().toString());
-            Intent i = new Intent(view.getContext(), StoreMainPageActivity.class);
-            i.putExtra("product_data", productData);
-            i.putExtra("product_quantity", quantity);
-            //TODO
-            startActivity(i);
-            //CONTINUE SHOPPING OR GO TO CART DIALOG
+            ProductCart productCart = new ProductCart();
+            productCart.product_name = productData[0];
+            productCart.product_price = productData[1];
+            productCart.product_image = productData[2];
+            productCart.product_quantity = productQuantity.getText().toString();
 
+            new addToCartTask().execute(productCart);
 
         });
 

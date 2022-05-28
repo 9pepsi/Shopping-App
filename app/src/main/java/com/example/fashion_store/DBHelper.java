@@ -1,5 +1,9 @@
 package com.example.fashion_store;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,13 +11,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DBHelper {
-    private static final String URL = "jdbc:mysql://0twdk0tywrk3.eu-central-2.psdb.cloud/fashion?sslMode=VERIFY_IDENTITY";
-    private static final String USER = "woerlhlpnkt9";
-    private static final String PASSWORD = "pscale_pw_hLozsoJu8cB5Go-mTHG5D2ifNn4vZiVQdaAzLaIPjpU";
+    private static final String URL = "jdbc:mysql://b0w4c2e3ott0.eu-central-1.psdb.cloud/fashion?sslMode=VERIFY_IDENTITY";
+    private static final String USER = "hpcov5w7asni";
+    private static final String PASSWORD = "pscale_pw_WwCDT5EcjXvawkEzQJtq4hNIPoBPvM65X3CSh05OSrc";
     private Connection conn;
     private PreparedStatement preparedStmt;
 
-    DBHelper() throws SQLException {
+     DBHelper() throws SQLException {
         conn = DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
@@ -270,6 +274,159 @@ public class DBHelper {
 
     }
 
+    public int getLoggedUserID() throws SQLException {
+        //get logged in user DB id
+        int user_id = -1;
+        SharedPreferences sharedPreferences = LoginActivity.getContext().getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        String user_email = sharedPreferences.getString("loginEmail","");
+        //get id query
+        String query = "SELECT id " +
+                "FROM auth_login " +
+                "WHERE user_email = ?";
+        //prepare statement
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, user_email);
+        //execute and get id
+        preparedStmt.execute();
+        ResultSet rs = preparedStmt.getResultSet();
+        rs.next();
+        user_id = rs.getInt("id");
+        //close connection
+        rs.close();
+        this.closeConnection();
+        //return id
+        return user_id;
+    }
+
+    public void addOrUpdateCart(ProductCart productCart) throws SQLException{
+        int user_id = new DBHelper().getLoggedUserID();
+        String product_name = productCart.product_name;
+        String product_price = productCart.product_price;
+        String product_img = productCart.product_image;
+        String product_quantity = productCart.product_quantity;
+        boolean doesExist = false;
+        //check if already exists in cart
+        String query = "SELECT EXISTS(SELECT * FROM cart_data " +
+                "WHERE user_id= ? AND product_name=? )";
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, Integer.toString(user_id));
+        preparedStmt.setString(2, product_name);
+        preparedStmt.execute();
+        ResultSet rs = preparedStmt.getResultSet();
+        rs.next();
+        doesExist = rs.getBoolean(1);
+
+        //clean up
+        rs.close();
+
+
+        //update quantity or add to cart if doesn't exist
+        if (doesExist){
+            //if exists update quantity
+            String query2 = "UPDATE cart_data " +
+                    "SET product_quantity = ? " +
+                    "WHERE user_id = ? AND product_name = ?";
+
+            preparedStmt = conn.prepareStatement(query2);
+            preparedStmt.setString(1, product_quantity);
+            preparedStmt.setString(2, Integer.toString(user_id));
+            preparedStmt.setString(3, product_name);
+
+            preparedStmt.execute();
+            this.closeConnection();
+        }else {
+            //if doesn't exists, add to cart data
+            String query3 = "INSERT INTO cart_data (user_id, product_name, product_price, " +
+                    "product_img, product_quantity) VALUES (?,?,?,?,?)";
+
+            preparedStmt = conn.prepareStatement(query3);
+            preparedStmt.setString(1, Integer.toString(user_id));
+            preparedStmt.setString(2, product_name);
+            preparedStmt.setString(3, product_price);
+            preparedStmt.setString(4, product_img);
+            preparedStmt.setString(5, product_quantity);
+
+            preparedStmt.execute();
+            this.closeConnection();
+        }
+    }
+
+    public int getUserCartCount() throws SQLException {
+        int user_id = new DBHelper().getLoggedUserID();
+        String query = "SELECT count(*) FROM cart_data WHERE user_id = ?";
+
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, Integer.toString(user_id));
+
+        preparedStmt.execute();
+        ResultSet rs = preparedStmt.getResultSet();
+        rs.next();
+        int userCartCount = rs.getInt(1);
+
+        rs.close();
+        this.closeConnection();
+
+        return userCartCount;
+    }
+
+    public String[][] getUserCart() throws SQLException {
+        int user_id = new DBHelper().getLoggedUserID();
+        int cartCount = new DBHelper().getUserCartCount();
+        String query = "SELECT * FROM cart_data WHERE user_id = ?";
+
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, Integer.toString(user_id));
+
+        preparedStmt.execute();
+        ResultSet rs = preparedStmt.getResultSet();
+
+        String[][] userCart = new String[cartCount][6];
+        int i = 0;
+        while (rs.next()){
+            userCart[i][0] = rs.getString("id");
+            userCart[i][1] = rs.getString("user_id");
+            userCart[i][2] = rs.getString("product_name");
+            userCart[i][3] = rs.getString("product_price");
+            userCart[i][4] = rs.getString("product_img");
+            userCart[i][5] = rs.getString("product_quantity");
+            i++;
+        }
+        rs.close();
+        this.closeConnection();
+
+        return userCart;
+
+
+    }
+
+    public void updateItemQuantity(String newQuantity, String productName) throws SQLException {
+         int user_id = new DBHelper().getLoggedUserID();
+         String query = "UPDATE cart_data " +
+                 "SET product_quantity = ? " +
+                 "WHERE user_id = ? AND product_name = ?";
+
+         preparedStmt = conn.prepareStatement(query);
+         preparedStmt.setString(1, newQuantity);
+         preparedStmt.setString(2, Integer.toString(user_id));
+         preparedStmt.setString(3, productName);
+
+         preparedStmt.execute();
+
+         this.closeConnection();
+    }
+
+    public void deleteCartItem (String productName) throws SQLException {
+         int user_id = new DBHelper().getLoggedUserID();
+         String query = "DELETE FROM cart_data WHERE user_id = ? AND product_name = ?";
+
+         preparedStmt = conn.prepareStatement(query);
+         preparedStmt.setString(1, Integer.toString(user_id));
+         preparedStmt.setString(2, productName);
+
+         preparedStmt.execute();
+
+         this.closeConnection();
+    }
 
     public void closeConnection() throws SQLException {
         conn.close();

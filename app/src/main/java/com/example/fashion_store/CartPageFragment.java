@@ -1,6 +1,8 @@
 package com.example.fashion_store;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -12,10 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import org.apache.commons.lang3.ArrayUtils;
+import java.sql.SQLException;
 
 public class CartPageFragment extends Fragment {
 
     ListView cartList;
+    ProgressDialog progressDialog;
+    View view;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,23 +36,63 @@ public class CartPageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View empty_cart_view = inflater.inflate(R.layout.fragment_empty_cart_page, container, false);
-        View view = inflater.inflate(R.layout.fragment_cart_page, container, false);
+        view = inflater.inflate(R.layout.fragment_cart_page, container, false);
 
         cartList = view.findViewById(R.id.cart_list);
 
-        Intent fromP = requireActivity().getIntent();
-        if(fromP.hasExtra("product_data")){
-            String[] productData = fromP.getStringArrayExtra("product_data");
-            String quantity = fromP.getStringExtra("product_quantity");
-            String[] product_name = {productData[0]};
-            String[] product_price = {productData[1]};
-            String[] product_img = {productData[2]};
-            String[] product_quantity = {quantity};
-            CustomCartList CCL = new CustomCartList(getActivity(),product_name, product_price, product_img, product_quantity);
-            cartList.setAdapter(CCL);
-        }else{
-            view = empty_cart_view;
+        class checkUserCart extends AsyncTask<Void, Void, String[][]>{
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                progressDialog = ProgressDialog.show(view.getContext(),"", "Checking Cart...");
+            }
+
+            @Override
+            protected String[][] doInBackground(Void... voids) {
+                int cartItemCount = 0;
+                String[][] cartItems = null;
+                try {
+                    cartItemCount = new DBHelper().getUserCartCount();
+                    cartItems = new String[cartItemCount][6];
+                    cartItems = new DBHelper().getUserCart();
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return cartItems;
+            }
+
+            @Override
+            protected void onPostExecute(String[][] productCart) {
+
+                if(!ArrayUtils.isEmpty(productCart)) {
+
+                    view = inflater.inflate(R.layout.fragment_cart_page, container, false);
+
+                    String[] productNames = new String[productCart.length];
+                    String[] productPrices = new String[productCart.length];
+                    String[] productImages = new String[productCart.length];
+                    String[] productQuantities = new String[productCart.length];
+
+                    for (int i = 0; i < productCart.length; i++) {
+                        productNames[i] = productCart[i][2];
+                        productPrices[i] = productCart[i][3];
+                        productImages[i] = productCart[i][4];
+                        productQuantities[i] = productCart[i][5];
+                    }
+
+                    CustomCartList customCartList = new CustomCartList(getActivity(), productNames, productPrices,
+                            productImages, productQuantities);
+                    cartList.setAdapter(customCartList);
+                }else{
+                    view = inflater.inflate(R.layout.fragment_empty_cart_page, container, false);
+                }
+
+                progressDialog.dismiss();
+            }
         }
+
+        new checkUserCart().execute();
 
         return view;
     }
