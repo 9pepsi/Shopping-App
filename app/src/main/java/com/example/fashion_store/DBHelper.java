@@ -3,22 +3,41 @@ package com.example.fashion_store;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.content.SharedPreferences;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class DBHelper {
-    private static final String URL = "jdbc:mysql://b0w4c2e3ott0.eu-central-1.psdb.cloud/fashion?sslMode=VERIFY_IDENTITY";
-    private static final String USER = "hpcov5w7asni";
-    private static final String PASSWORD = "pscale_pw_WwCDT5EcjXvawkEzQJtq4hNIPoBPvM65X3CSh05OSrc";
+    private static DBHelper instance;
     private Connection conn;
     private PreparedStatement preparedStmt;
 
-     DBHelper() throws SQLException {
-        conn = DriverManager.getConnection(URL, USER, PASSWORD);
+    private DBHelper() throws SQLException {
+        String URL = "jdbc:mysql://6fog8ps1vhie.eu-central-1.psdb.cloud/fashion?sslMode=VERIFY_IDENTITY";
+        String USER = "976lue5559j9";
+        String PASS = "pscale_pw_DBcIA6lGiGx3dHUNcWljDhnpXqKvcYYVog8iDUEweMM";
+        this.conn = DriverManager.getConnection(URL, USER, PASS);
+    }
+
+    public Connection getConnection() {
+        return conn;
+    }
+
+    public static DBHelper getInstance() throws SQLException {
+        if (instance == null) {
+            instance = new DBHelper();
+        } else if (instance.getConnection().isClosed()) {
+            instance = new DBHelper();
+        }
+        return instance;
     }
 
     public boolean registerUser(String name, String email, String password, String dob) throws SQLException {
@@ -33,8 +52,6 @@ public class DBHelper {
         preparedStmt.setString(4,dob);
         //execute
         preparedStmt.execute();
-        //close
-        this.closeConnection();
 
         return true;
     }
@@ -54,8 +71,7 @@ public class DBHelper {
         rs.next();
         //check if exists
         boolean isUser = rs.getBoolean(1);
-        //close connection
-        this.closeConnection();
+
 
         return isUser;
     }
@@ -72,8 +88,7 @@ public class DBHelper {
         //check update
         boolean isReset;
         isReset = rows != 0;
-        //close connection
-        this.closeConnection();
+
 
         return isReset;
     }
@@ -99,36 +114,9 @@ public class DBHelper {
             userData[3] = rs.getString("user_dob");
         }
         rs.close();
-        //close connection
-        this.closeConnection();
+
         //return user data
         return userData;
-    }
-
-    public String[] displayProductData(String productName) throws SQLException {
-        //query
-        String query = "SELECT * " +
-                "FROM products " +
-                "WHERE product_name = ?";
-        //prepare statement
-        preparedStmt = conn.prepareStatement(query);
-        preparedStmt.setString(1, productName);
-        //execute
-        preparedStmt.execute();
-        //get result set
-        ResultSet rs = preparedStmt.getResultSet();
-        //product data
-        String[] productData = new String[5];
-        while (rs.next()){
-            productData[0] = rs.getString("product_name");
-            productData[1] = rs.getString("product_price");
-            productData[2] = rs.getString("product_img");
-            productData[3] = rs.getString("product_desc");
-            productData[4] = rs.getString("product_category");
-        }
-        rs.close();
-        this.closeConnection();
-        return productData;
     }
 
     public String[][] getFeaturedProducts(String productOne, String productTwo, String productThree) throws SQLException{
@@ -158,8 +146,7 @@ public class DBHelper {
             count++;
         }
         rs.close();
-        //close connection
-        this.closeConnection();
+
         //return products
         return featuredProducts;
     }
@@ -181,12 +168,12 @@ public class DBHelper {
         int count = rs.getInt(1);
         //close
         rs.close();
-        this.closeConnection();
+
 
         return count;
     }
 
-    public String[][] displayCategoryProducts(String productCategory) throws SQLException {
+    public String[][] getCategoryProducts(String productCategory) throws SQLException {
         //query
         String sql = "SELECT * " +
                 "FROM products " +
@@ -200,7 +187,7 @@ public class DBHelper {
         //get result set
         ResultSet rs = preparedStmt.getResultSet();
         //get product count
-        int count = new DBHelper().getCategoryProductsCount(productCategory);
+        int count = DBHelper.getInstance().getCategoryProductsCount(productCategory);
         //get products data
         String[][] productData = new String[count][5];
         int i = 0;
@@ -214,7 +201,7 @@ public class DBHelper {
         }
 
         rs.close();
-        this.closeConnection();
+
         return productData;
 
     }
@@ -236,12 +223,11 @@ public class DBHelper {
         int count = rs.getInt(1);
         //close
         rs.close();
-        this.closeConnection();
 
         return count;
     }
 
-    public String[][] displaySearchProducts(String productQuery) throws SQLException {
+    public String[][] getSearchProducts(String productQuery) throws SQLException {
         //query
         String sql = "SELECT * " +
                 "FROM products " +
@@ -255,7 +241,7 @@ public class DBHelper {
         //get result set
         ResultSet rs = preparedStmt.getResultSet();
         //get product count
-        int count = new DBHelper().getSearchProductsCount(productQuery);
+        int count = DBHelper.getInstance().getSearchProductsCount(productQuery);
         //get products data
         String[][] productData = new String[count][5];
         int i = 0;
@@ -269,7 +255,7 @@ public class DBHelper {
         }
 
         rs.close();
-        this.closeConnection();
+
         return productData;
 
     }
@@ -293,13 +279,12 @@ public class DBHelper {
         user_id = rs.getInt("id");
         //close connection
         rs.close();
-        this.closeConnection();
         //return id
         return user_id;
     }
 
-    public void addOrUpdateCart(ProductCart productCart) throws SQLException{
-        int user_id = new DBHelper().getLoggedUserID();
+    public boolean addOrUpdateCart(ProductCart productCart) throws SQLException{
+        int user_id = DBHelper.getInstance().getLoggedUserID();
         String product_name = productCart.product_name;
         String product_price = productCart.product_price;
         String product_img = productCart.product_image;
@@ -333,7 +318,7 @@ public class DBHelper {
             preparedStmt.setString(3, product_name);
 
             preparedStmt.execute();
-            this.closeConnection();
+
         }else {
             //if doesn't exists, add to cart data
             String query3 = "INSERT INTO cart_data (user_id, product_name, product_price, " +
@@ -347,12 +332,12 @@ public class DBHelper {
             preparedStmt.setString(5, product_quantity);
 
             preparedStmt.execute();
-            this.closeConnection();
         }
+        return true;
     }
 
     public int getUserCartCount() throws SQLException {
-        int user_id = new DBHelper().getLoggedUserID();
+        int user_id = DBHelper.getInstance().getLoggedUserID();
         String query = "SELECT count(*) FROM cart_data WHERE user_id = ?";
 
         preparedStmt = conn.prepareStatement(query);
@@ -364,14 +349,13 @@ public class DBHelper {
         int userCartCount = rs.getInt(1);
 
         rs.close();
-        this.closeConnection();
 
         return userCartCount;
     }
 
     public String[][] getUserCart() throws SQLException {
-        int user_id = new DBHelper().getLoggedUserID();
-        int cartCount = new DBHelper().getUserCartCount();
+        int user_id = DBHelper.getInstance().getLoggedUserID();
+        int cartCount = DBHelper.getInstance().getUserCartCount();
         String query = "SELECT * FROM cart_data WHERE user_id = ?";
 
         preparedStmt = conn.prepareStatement(query);
@@ -392,44 +376,352 @@ public class DBHelper {
             i++;
         }
         rs.close();
-        this.closeConnection();
 
         return userCart;
 
 
     }
 
-    public void updateItemQuantity(String newQuantity, String productName) throws SQLException {
-         int user_id = new DBHelper().getLoggedUserID();
-         String query = "UPDATE cart_data " +
-                 "SET product_quantity = ? " +
-                 "WHERE user_id = ? AND product_name = ?";
+    public boolean updateItemQuantity(String newQuantity, String productName) throws SQLException {
+        int user_id = DBHelper.getInstance().getLoggedUserID();
+        String query = "UPDATE cart_data " +
+                "SET product_quantity = ? " +
+                "WHERE user_id = ? AND product_name = ?";
 
-         preparedStmt = conn.prepareStatement(query);
-         preparedStmt.setString(1, newQuantity);
-         preparedStmt.setString(2, Integer.toString(user_id));
-         preparedStmt.setString(3, productName);
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, newQuantity);
+        preparedStmt.setString(2, Integer.toString(user_id));
+        preparedStmt.setString(3, productName);
 
-         preparedStmt.execute();
+        preparedStmt.execute();
 
-         this.closeConnection();
+        return true;
     }
 
-    public void deleteCartItem (String productName) throws SQLException {
-         int user_id = new DBHelper().getLoggedUserID();
-         String query = "DELETE FROM cart_data WHERE user_id = ? AND product_name = ?";
+    public boolean deleteCartItem (String productName) throws SQLException {
+        int user_id = DBHelper.getInstance().getLoggedUserID();
+        String query = "DELETE FROM cart_data WHERE user_id = ? AND product_name = ?";
 
-         preparedStmt = conn.prepareStatement(query);
-         preparedStmt.setString(1, Integer.toString(user_id));
-         preparedStmt.setString(2, productName);
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, Integer.toString(user_id));
+        preparedStmt.setString(2, productName);
 
-         preparedStmt.execute();
+        preparedStmt.execute();
 
-         this.closeConnection();
+        return true;
     }
 
-    public void closeConnection() throws SQLException {
-        conn.close();
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public boolean confirmOrder(String orderQuantity, String orderPrice) throws SQLException {
+        //create order
+            int user_id = DBHelper.getInstance().getLoggedUserID();
+            int order_id = Math.abs(LocalDateTime.now().hashCode());
+            String order_date = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now());
+
+            //query
+            String query = "INSERT INTO orders (user_id, order_id, order_quantity, order_total_price, order_date) " +
+                "VALUES (?,?,?,?,?)";
+
+            //prepare statement
+            preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setString(1, Integer.toString(user_id));
+            preparedStmt.setString(2, Integer.toString(order_id));
+            preparedStmt.setString(3, orderQuantity);
+            preparedStmt.setString(4, orderPrice);
+            preparedStmt.setString(5, order_date);
+
+            //execute
+            preparedStmt.execute();
+            //close
+            preparedStmt.close();
+
+          //create order data
+        //query
+        String query2 = "INSERT INTO order_data (user_id, order_id, product_name, product_price, product_quantity, order_date) " +
+                "SELECT user_id, ?, product_name, product_price, product_quantity, ? " +
+                "FROM cart_data " +
+                "WHERE user_id = ?";
+        //prepare Statement
+        preparedStmt = conn.prepareStatement(query2);
+        preparedStmt.setString(1, Integer.toString(order_id));
+        preparedStmt.setString(2, order_date);
+        preparedStmt.setString(3, Integer.toString(user_id));
+        //execute
+        preparedStmt.execute();
+        //close
         preparedStmt.close();
+
+        //delete cart data
+        String query3 = "DELETE FROM cart_data WHERE user_id = ?";
+        //prepare statement
+        preparedStmt = conn.prepareStatement(query3);
+        preparedStmt.setString(1, Integer.toString(user_id));
+        //execute
+        preparedStmt.execute();
+        //close
+        preparedStmt.close();
+
+        return true;
+    }
+
+    public String getUserEmail() throws  SQLException {
+        int user_id = DBHelper.getInstance().getLoggedUserID();
+        String user_email;
+        //query
+        String query = "SELECT user_email FROM auth_login WHERE id = ?";
+
+        //prepare statement
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, Integer.toString(user_id));
+
+        //execute
+        preparedStmt.execute();
+
+        //get result
+        ResultSet rs = preparedStmt.getResultSet();
+        rs.next();
+
+        user_email = rs.getString("user_email");
+
+        //close
+        preparedStmt.close();
+
+        return user_email;
+    }
+
+    public String getUserName() throws  SQLException {
+        int user_id = DBHelper.getInstance().getLoggedUserID();
+        String user_name;
+        //query
+        String query = "SELECT user_name FROM auth_login WHERE id = ?";
+
+        //prepare statement
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, Integer.toString(user_id));
+
+        //execute
+        preparedStmt.execute();
+
+        //get result
+        ResultSet rs = preparedStmt.getResultSet();
+        rs.next();
+
+        user_name = rs.getString("user_name");
+
+        //close
+        preparedStmt.close();
+
+        return user_name;
+    }
+
+    public boolean setUserAddress(String address) throws SQLException {
+        int user_id = DBHelper.getInstance().getLoggedUserID();
+        //query
+        String query = "UPDATE auth_login " +
+                "SET user_address = ? " +
+                "WHERE id = ?";
+
+        //prepare statement
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, address);
+        preparedStmt.setString(2, Integer.toString(user_id));
+
+        //execute
+        preparedStmt.execute();
+
+        //close
+        preparedStmt.close();
+
+        return true;
+    }
+
+    public String getUserAddress() throws SQLException{
+        String user_id = Integer.toString(DBHelper.getInstance().getLoggedUserID());
+
+        String query = "SELECT user_address FROM auth_login WHERE id = ?";
+
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, user_id);
+
+        preparedStmt.execute();
+
+        ResultSet rs = preparedStmt.getResultSet();
+        rs.next();
+
+        return rs.getString("user_address");
+    }
+
+    public  int getUserOrdersCount() throws SQLException{
+        int user_id = DBHelper.getInstance().getLoggedUserID();
+        //query
+        String query = "SELECT count(*) FROM orders WHERE user_id = ?";
+
+        //prepare statement
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, Integer.toString(user_id));
+
+        //execute
+        preparedStmt.execute();
+
+        ResultSet rs = preparedStmt.getResultSet();
+        rs.next();
+
+        return rs.getInt(1);
+    }
+
+    public String[][] getUserOrders() throws SQLException{
+        int user_id = DBHelper.getInstance().getLoggedUserID();
+        int count = DBHelper.getInstance().getUserOrdersCount();
+        String[][] orders = new String[count][6];
+        //query
+        String query = "SELECT * FROM orders WHERE user_id = ?";
+
+        //prepare statement
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, Integer.toString(user_id));
+
+        //execute
+        preparedStmt.execute();
+
+        ResultSet rs = preparedStmt.getResultSet();
+
+        int i = 0;
+        while (rs.next()){
+            orders[i][0] = rs.getString("id");
+            orders[i][1] = rs.getString("user_id");
+            orders[i][2] = rs.getString("order_id");
+            orders[i][3] = rs.getString("order_quantity");
+            orders[i][4] = rs.getString("order_total_price");
+            orders[i][5] = rs.getString("order_date");
+            i++;
+        }
+        preparedStmt.close();
+
+        return orders;
+    }
+
+    public  int getUserOrdersCountThisMonth() throws SQLException{
+        int user_id = DBHelper.getInstance().getLoggedUserID();
+        //query
+        String query = "SELECT count(*) FROM orders " +
+                "WHERE order_date <= CURDATE() AND order_date >= (CURDATE() - INTERVAL 1 MONTH)" +
+                "AND user_id = ? " +
+                "ORDER BY order_date DESC";
+
+        //prepare statement
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, Integer.toString(user_id));
+
+        //execute
+        preparedStmt.execute();
+
+        ResultSet rs = preparedStmt.getResultSet();
+        rs.next();
+
+        return rs.getInt(1);
+    }
+
+    public String[][] getUserOrdersThisMonth() throws SQLException{
+        int user_id = DBHelper.getInstance().getLoggedUserID();
+        int count = DBHelper.getInstance().getUserOrdersCountThisMonth();
+        String[][] orders = new String[count][6];
+        //query
+        String query = "SELECT * FROM orders " +
+                "WHERE order_date <= CURDATE() AND order_date >= (CURDATE() - INTERVAL 1 MONTH) " +
+                "AND user_id = ? " +
+                "ORDER BY order_date DESC";
+
+        //prepare statement
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, Integer.toString(user_id));
+
+        //execute
+        preparedStmt.execute();
+
+        ResultSet rs = preparedStmt.getResultSet();
+
+        int i = 0;
+        while (rs.next()){
+            orders[i][0] = rs.getString("id");
+            orders[i][1] = rs.getString("user_id");
+            orders[i][2] = rs.getString("order_id");
+            orders[i][3] = rs.getString("order_quantity");
+            orders[i][4] = rs.getString("order_total_price");
+            orders[i][5] = rs.getString("order_date");
+            i++;
+        }
+        preparedStmt.close();
+
+        return orders;
+    }
+
+    public String getCurrentDate() throws SQLException{
+        String query = "SELECT CURDATE()";
+        preparedStmt = conn.prepareStatement(query);
+
+        preparedStmt.execute();
+
+        ResultSet rs = preparedStmt.getResultSet();
+        rs.next();
+
+        return rs.getString(1);
+    }
+
+    public String getLastMonthDate() throws SQLException{
+        String query = "SELECT CURDATE() - INTERVAL 1 MONTH";
+        preparedStmt = conn.prepareStatement(query);
+
+        preparedStmt.execute();
+
+        ResultSet rs = preparedStmt.getResultSet();
+        rs.next();
+
+        return rs.getString(1);
+    }
+
+    public int getOrderDetailsItemCount(String order_id) throws SQLException{
+        int user_id = DBHelper.getInstance().getLoggedUserID();
+
+        String query = "SELECT count(*) FROM order_data WHERE order_id = ? AND user_id = ?";
+
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, order_id);
+        preparedStmt.setString(2, Integer.toString(user_id));
+
+        preparedStmt.execute();
+        ResultSet rs = preparedStmt.getResultSet();
+        rs.next();
+
+        return rs.getInt(1);
+    }
+
+    public String[][] getOrderDetailsItem(String order_id) throws SQLException{
+        int user_id = DBHelper.getInstance().getLoggedUserID();
+        int count = DBHelper.getInstance().getOrderDetailsItemCount(order_id);
+        String[][] orderItems = new String[count][7];
+
+        String query = "SELECT * FROM order_data WHERE order_id = ? AND user_id = ?";
+
+        preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, order_id);
+        preparedStmt.setString(2, Integer.toString(user_id));
+
+        preparedStmt.execute();
+        ResultSet rs = preparedStmt.getResultSet();
+
+        int i = 0;
+        while (rs.next()){
+            orderItems[i][0] = rs.getString("id");
+            orderItems[i][1] = rs.getString("user_id");
+            orderItems[i][2] = rs.getString("order_id");
+            orderItems[i][3] = rs.getString("product_name");
+            orderItems[i][4] = rs.getString("product_price");
+            orderItems[i][5] = rs.getString("product_quantity");
+            orderItems[i][6] = rs.getString("order_date");
+            i++;
+        }
+        preparedStmt.close();
+
+        return orderItems;
     }
 }

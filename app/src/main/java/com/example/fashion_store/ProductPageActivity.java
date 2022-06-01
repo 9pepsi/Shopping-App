@@ -3,14 +3,11 @@ package com.example.fashion_store;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -40,7 +37,7 @@ public class ProductPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_page);
         //add to cart task
-        class addToCartTask extends AsyncTask<ProductCart, Void, Void>{
+        class addToCartTask extends AsyncTask<ProductCart, Void, Boolean>{
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -48,20 +45,24 @@ public class ProductPageActivity extends AppCompatActivity {
             }
 
             @Override
-            protected Void doInBackground(ProductCart... productCarts) {
+            protected Boolean doInBackground(ProductCart... productCarts) {
+                boolean done = false;
                 try {
-                    new DBHelper().addOrUpdateCart(productCarts[0]);
+                    done = DBHelper.getInstance().addOrUpdateCart(productCarts[0]);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                return null;
+                return done;
             }
 
             @Override
-            protected void onPostExecute(Void unused) {
+            protected void onPostExecute(Boolean done) {
+                if(done){
+                    Toast.makeText(ProductPageActivity.this, "Added to Cart!", Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(ProductPageActivity.this, "Failed to add product", Toast.LENGTH_LONG).show();
+                }
                 progressDialog.dismiss();
-                Toast.makeText(ProductPageActivity.this, "Added to Cart!", Toast.LENGTH_LONG).show();
-
             }
         }
         //get product data

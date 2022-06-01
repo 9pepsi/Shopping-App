@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class CustomCategoryList extends ArrayAdapter {
+public class CustomCategoryList extends ArrayAdapter<String> {
     private String[] categoryName;
     private Integer[] categoryImage;
     private Activity context;

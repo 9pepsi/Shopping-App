@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_bg"
+    android:scaleY="1.005"
+
+    tools:context=".CheckoutActivity">
+
+    <TextView
+        android:id="@+id/checkout_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_background"
+        android:backgroundTint="@color/white"
+        android:padding="10dp"
+        android:text="ORDER SUMMARY"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/checkout_list_card_view"
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
+        android:layout_below="@id/checkout_text"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="10dp"
+        android:layout_centerHorizontal="true"
+        app:cardCornerRadius="30dp">
+
+        <ListView
+            android:id="@+id/order_summary_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/layout_background_full" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/checkout_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/checkout_list_card_view"
+        android:layout_margin="20dp"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp"
+        app:cardCornerRadius="30dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:id="@+id/payment_method"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20sp"
+                android:layout_marginStart="10sp"
+                android:layout_alignParentStart="true"
+                android:text="Payment Method:"
+                android:textSize="18sp"
+                android:textAlignment="viewStart"/>
+
+            <TextView
+                android:id="@+id/cod"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="22sp"
+                android:layout_marginEnd="10dp"
+                android:text="Cash on Delivery"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/no_of_items_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/payment_method"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10sp"
+                android:layout_marginTop="30sp"
+                android:text="No. of Items:"
+                android:textAlignment="viewStart"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/order_summary_no_of_items"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/payment_method"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="30sp"
+                android:layout_marginEnd="20sp"
+                android:text="No"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/order_total_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/order_summary_no_of_items"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10sp"
+                android:layout_marginTop="30sp"
+                android:text="Order Total:"
+                android:textAlignment="viewStart"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/order_summary_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/order_summary_no_of_items"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="30sp"
+                android:layout_marginEnd="20sp"
+                android:text="Total"
+                android:textAlignment="viewStart"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <Button
+        android:id="@+id/order_summary_track_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/checkout_card_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_background"
+        android:padding="10dp"
+        android:text="TRACK ORDER"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

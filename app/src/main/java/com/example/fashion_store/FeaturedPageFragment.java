@@ -97,7 +97,7 @@ public class FeaturedPageFragment extends Fragment {
             protected String[][] doInBackground(String... productName) {
                 String[][] pData = new String[3][5];
                 try {
-                    pData = new DBHelper().getFeaturedProducts(productName[0], productName[1], productName[2]);
+                    pData = DBHelper.getInstance().getFeaturedProducts(productName[0], productName[1], productName[2]);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

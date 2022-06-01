@@ -39,4 +39,6 @@
     <string name="search_query">{SEARCH QUERY}</string>
     <string name="dec_button">dec_button</string>
     <string name="inc_button">inc_button</string>
+    <string name="enter_your_shipping_address">Enter your Shipping address, this address will only be used to Ship you your products.</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

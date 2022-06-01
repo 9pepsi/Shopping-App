@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 
@@ -12,7 +13,7 @@ android {
         targetSdk 32
         versionCode 1
         versionName "1.0"
-
+        //buildConfigField("String", "ROUTING_API_KEY", "BmZwNYH2ZCio8OzotAg0KHl8iyOYe7u3")
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -27,6 +28,13 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     namespace 'com.example.fashion_store'
+    buildFeatures {
+        viewBinding true
+    }
+
+    dataBinding{
+        enabled=true
+    }
 }
 
 dependencies {
@@ -42,7 +50,15 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.android.support:cardview-v7:28.0.0'
     implementation 'com.github.scottyab:showhidepasswordedittext:0.8'
+    implementation 'com.tomtom.online:sdk-maps:2.4725'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation files('libs/additionnal.jar')
+    implementation files('libs/activation.jar')
+    implementation files('libs/mail.jar')
+    implementation 'com.github.blackfizz:eazegraph:1.2.5l@aar'
+    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

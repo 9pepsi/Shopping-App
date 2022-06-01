@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_bg"
+    android:scaleY="1.005"
+    tools:context=".UpdateUserAddressActivity">
+
+    <TextView
+        android:id="@+id/address_text_legend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:text="UPDATE ADDRESS"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:background="@drawable/button_background"
+        android:backgroundTint="@color/white"
+        android:padding="10dp"/>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/address_text_legend"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="20dp"
+        app:cardCornerRadius="30dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/add_address_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20sp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_baseline_add_home_192"/>
+
+            <TextView
+                android:id="@+id/shipping_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/add_address_img"
+                android:layout_centerHorizontal="true"
+                android:text="@string/enter_your_shipping_address"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:layout_margin="20sp"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/enter_address_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/shipping_text"
+                android:layout_margin="20sp"
+                android:layout_centerHorizontal="true"
+                app:cardCornerRadius="30dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/black">
+
+                <EditText
+                    android:id="@+id/enter_address_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:background="@drawable/button_background"
+                    android:hint="Enter Home Address"
+                    android:backgroundTint="@color/white"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <Button
+                android:id="@+id/update_address_bt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="30dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="20sp"
+                android:layout_marginTop="50dp"
+                android:text="Update Home Address"
+                android:textAlignment="center"
+                android:background="@drawable/button_background"/>
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</RelativeLayout>

@@ -7,12 +7,13 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import org.apache.commons.lang3.ArrayUtils;
 import java.sql.SQLException;
@@ -21,7 +22,63 @@ public class CartPageFragment extends Fragment {
 
     ListView cartList;
     ProgressDialog progressDialog;
+    SwipeRefreshLayout swipeRefreshLayout;
+    SwipeRefreshLayout.OnRefreshListener onRefreshListener;
+    Button checkoutButton;
     View view;
+
+    String[] productNames;
+    String[] productPrices;
+    String[] productImages;
+    String[] productQuantities;
+
+    class checkUserCart extends AsyncTask<Void, Void, String[][]>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(view.getContext(),"", "Checking Cart...");
+        }
+
+        @Override
+        protected String[][] doInBackground(Void... voids) {
+            String[][] cartItems = null;
+            try {
+                cartItems = DBHelper.getInstance().getUserCart();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return cartItems;
+        }
+
+        @Override
+        protected void onPostExecute(String[][] productCart) {
+            if(productCart.length > 0) {
+                 productNames = new String[productCart.length];
+                 productPrices = new String[productCart.length];
+                 productImages = new String[productCart.length];
+                 productQuantities = new String[productCart.length];
+
+                for (int i = 0; i < productCart.length; i++) {
+                    productNames[i] = productCart[i][2];
+                    productPrices[i] = productCart[i][3];
+                    productImages[i] = productCart[i][4];
+                    productQuantities[i] = productCart[i][5];
+                }
+
+                CustomCartList customCartList = new CustomCartList(getActivity(), productNames, productPrices,
+                        productImages, productQuantities);
+                cartList.setAdapter(customCartList);
+            }else {
+                EmptyCartPageFragment emptyCartPageFragment = new EmptyCartPageFragment();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.store_fragment, emptyCartPageFragment).commit();
+            }
+
+
+            swipeRefreshLayout.setRefreshing(false);
+            progressDialog.dismiss();
+        }
+    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,65 +92,34 @@ public class CartPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View empty_cart_view = inflater.inflate(R.layout.fragment_empty_cart_page, container, false);
         view = inflater.inflate(R.layout.fragment_cart_page, container, false);
 
         cartList = view.findViewById(R.id.cart_list);
+        swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
+        checkoutButton = view.findViewById(R.id.cart_checkout_bt);
 
-        class checkUserCart extends AsyncTask<Void, Void, String[][]>{
+        checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                progressDialog = ProgressDialog.show(view.getContext(),"", "Checking Cart...");
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), CheckoutActivity.class);
+                intent.putExtra("order_product_names", productNames);
+                intent.putExtra("order_product_prices", productPrices);
+                intent.putExtra("order_product_quantities", productQuantities);
+                startActivity(intent);
             }
+        });
 
-            @Override
-            protected String[][] doInBackground(Void... voids) {
-                int cartItemCount = 0;
-                String[][] cartItems = null;
-                try {
-                    cartItemCount = new DBHelper().getUserCartCount();
-                    cartItems = new String[cartItemCount][6];
-                    cartItems = new DBHelper().getUserCart();
+        onRefreshListener = () -> {
+            new checkUserCart().execute();
+        };
+        swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
 
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                return cartItems;
-            }
 
-            @Override
-            protected void onPostExecute(String[][] productCart) {
-
-                if(!ArrayUtils.isEmpty(productCart)) {
-
-                    view = inflater.inflate(R.layout.fragment_cart_page, container, false);
-
-                    String[] productNames = new String[productCart.length];
-                    String[] productPrices = new String[productCart.length];
-                    String[] productImages = new String[productCart.length];
-                    String[] productQuantities = new String[productCart.length];
-
-                    for (int i = 0; i < productCart.length; i++) {
-                        productNames[i] = productCart[i][2];
-                        productPrices[i] = productCart[i][3];
-                        productImages[i] = productCart[i][4];
-                        productQuantities[i] = productCart[i][5];
-                    }
-
-                    CustomCartList customCartList = new CustomCartList(getActivity(), productNames, productPrices,
-                            productImages, productQuantities);
-                    cartList.setAdapter(customCartList);
-                }else{
-                    view = inflater.inflate(R.layout.fragment_empty_cart_page, container, false);
-                }
-
-                progressDialog.dismiss();
-            }
-        }
 
         new checkUserCart().execute();
 
         return view;
     }
+
+
 }

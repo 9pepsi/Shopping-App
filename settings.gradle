@@ -10,7 +10,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        jcenter()
         maven { url 'https://jitpack.io' }
+        maven { url "https://maven.tomtom.com:8443/nexus/content/repositories/releases/" }
     }
 }
 rootProject.name = "Shopping App"

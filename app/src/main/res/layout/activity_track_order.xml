@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_bg"
+    android:scaleY="1.005"
+    tools:context=".TrackOrderActivity">
+    <TextView
+        android:id="@+id/order_Text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp"
+        android:layout_margin="20sp"
+        android:text="ORDERS"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:background="@drawable/button_background"
+        android:backgroundTint="@color/white"/>
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/order_Text_view"
+        android:layout_margin="20sp"
+        app:cardCornerRadius="30dp">
+
+        <ListView
+            android:id="@+id/track_orders_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:dividerHeight="10dp"
+            android:divider="@color/white"
+            android:padding="5dp"/>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</RelativeLayout>

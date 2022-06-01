@@ -38,7 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
             protected Boolean doInBackground(String... userData) {
                 boolean registerComplete = false;
                 try {
-                    registerComplete = new DBHelper().registerUser(userData[0], userData[1], userData[2], userData[3]);
+                    registerComplete = DBHelper.getInstance().registerUser(userData[0], userData[1], userData[2], userData[3]);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

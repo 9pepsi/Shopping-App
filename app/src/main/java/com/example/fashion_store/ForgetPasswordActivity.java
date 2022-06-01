@@ -31,7 +31,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
             protected Boolean doInBackground(String... userData) {
                 boolean isReset = false;
                 try {
-                     isReset = new DBHelper().resetPassword(userData[0], userData[1]);
+                     isReset = DBHelper.getInstance().resetPassword(userData[0], userData[1]);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

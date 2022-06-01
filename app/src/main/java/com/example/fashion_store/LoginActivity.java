@@ -47,8 +47,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             protected Boolean doInBackground(String... userCredentials) {
                 try {
-                    isUser = new DBHelper().loginUser(userCredentials[0], userCredentials[1]);
-                    userData = new DBHelper().getUserData(userCredentials[0], userCredentials[1]);
+                    isUser = DBHelper.getInstance().loginUser(userCredentials[0], userCredentials[1]);
+                    userData = DBHelper.getInstance().getUserData(userCredentials[0], userCredentials[1]);
 
                 } catch (SQLException e) {
                     e.printStackTrace();

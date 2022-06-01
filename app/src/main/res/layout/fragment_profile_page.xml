@@ -78,7 +78,7 @@
         android:layout_height="50dp"
         android:layout_below="@id/profile_page_greeting_Card"
         android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/button_background"
         android:text="TRACK ORDERS" />
 
@@ -88,9 +88,19 @@
         android:layout_height="50dp"
         android:layout_below="@id/profile_page_track_bt"
         android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/button_background"
         android:text="ORDER HISTORY" />
+
+    <Button
+        android:id="@+id/set_address_bt"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/profile_page_history_bt"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/button_background"
+        android:text="SET Delivery ADDRESS" />
 
     <Button
         android:id="@+id/profile_page_sign_out_bt"

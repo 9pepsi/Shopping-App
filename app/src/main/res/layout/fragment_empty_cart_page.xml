@@ -4,11 +4,15 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/layout_background_full">
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:id="@+id/empty_cart_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
         app:cardCornerRadius="30dp"
         app:strokeColor="@color/black"
         app:strokeWidth="1dp">
@@ -40,5 +44,8 @@
 
 
     </com.google.android.material.card.MaterialCardView>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
 </RelativeLayout>

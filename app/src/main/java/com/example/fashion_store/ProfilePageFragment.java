@@ -1,6 +1,8 @@
 package com.example.fashion_store;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -24,7 +27,10 @@ public class ProfilePageFragment extends Fragment {
     TextView userEmail;
     Button trackOrderBT;
     Button orderHistoryBT;
+    Button setAddress;
     Button signOutBT;
+
+    ProgressDialog progressDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,40 +45,72 @@ public class ProfilePageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile_page, container, false);
-        //get user data from login page
-        Intent userDataIntent = requireActivity().getIntent();
-        userData = userDataIntent.getStringArrayExtra("user_data");
         //vars
         userName = view.findViewById(R.id.profile_page_user_name);
         userEmail = view.findViewById(R.id.profile_page_user_email);
         trackOrderBT = view.findViewById(R.id.profile_page_track_bt);
         orderHistoryBT = view.findViewById(R.id.profile_page_history_bt);
+        setAddress = view.findViewById(R.id.set_address_bt);
         signOutBT = view.findViewById(R.id.profile_page_sign_out_bt);
-        //set profile name
-        String name = userName.getText().toString().replace("{USER}", userData[2].concat("!"));
-        userName.setText(name);
-        //set profile email
-        String email = userEmail.getText().toString().replace("{EMAIL}", userData[1]);
-        userEmail.setText(email);
+        //get user info
+        class getUserInfoTask extends AsyncTask<Void, Void, String[]>{
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                progressDialog = ProgressDialog.show(view.getContext(), "", "Getting User Info...");
+            }
+
+            @Override
+            protected String[] doInBackground(Void... voids) {
+                String[] userData = new String[2];
+                try {
+                    userData[0] = DBHelper.getInstance().getUserEmail();
+                    userData[1] = DBHelper.getInstance().getUserName();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return userData;
+            }
+
+            @Override
+            protected void onPostExecute(String[] userData) {
+                //set profile name
+                String name = userName.getText().toString().replace("{USER}", userData[1].concat("!"));
+                userName.setText(name);
+                //set profile email
+                String email = userEmail.getText().toString().replace("{EMAIL}", userData[0]);
+                userEmail.setText(email);
+
+                progressDialog.dismiss();
+            }
+        }
+        new getUserInfoTask().execute();
         //track
         trackOrderBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO
+                startActivity(new Intent(view.getContext(), TrackOrderActivity.class));
             }
         });
         //history
         orderHistoryBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO
+                startActivity(new Intent(view.getContext(), OrderHistoryActivity.class));
+            }
+        });
+        //set Address
+        setAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(view.getContext(), UpdateUserAddressActivity.class));
             }
         });
         //sign out
         signOutBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO
+                new StoreDialogs().signOutDialog(view.getContext(), "Are you sure you want to sign out?").show();
             }
         });
 

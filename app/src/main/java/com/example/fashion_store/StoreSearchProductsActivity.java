@@ -44,13 +44,13 @@ public class StoreSearchProductsActivity extends AppCompatActivity {
             protected String[][] doInBackground(String... category) {
                 productsCount = 0;
                 try {
-                    productsCount = new DBHelper().getCategoryProductsCount(category[0]);
+                    productsCount = DBHelper.getInstance().getCategoryProductsCount(category[0]);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
                 String[][] categoryProducts = new String[productsCount][5];
                 try {
-                    categoryProducts = new DBHelper().displayCategoryProducts(category[0]);
+                    categoryProducts = DBHelper.getInstance().getCategoryProducts(category[0]);
                     productsData = new String[categoryProducts.length][5];
 
                     for (int i = 0; i < categoryProducts.length; i++){
@@ -97,13 +97,13 @@ public class StoreSearchProductsActivity extends AppCompatActivity {
             protected String[][] doInBackground(String... query) {
                 productsCount = 0;
                 try {
-                    productsCount = new DBHelper().getSearchProductsCount(query[0]);
+                    productsCount = DBHelper.getInstance().getSearchProductsCount(query[0]);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
                 String[][] productsQueryData = new String[productsCount][5];
                 try {
-                    productsQueryData = new DBHelper().displaySearchProducts(query[0]);
+                    productsQueryData = DBHelper.getInstance().getSearchProducts(query[0]);
                     productsData = new String[productsQueryData.length][5];
 
                     for (int i = 0; i < productsQueryData.length; i++){

@@ -1,6 +1,7 @@
 package com.example.fashion_store;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -10,11 +11,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+
 import com.squareup.picasso.Picasso;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.sql.SQLException;
 
@@ -55,7 +60,7 @@ public class CustomCartList extends ArrayAdapter {
         productQuantityView.setText(productQuantity[position]);
         Picasso.get().load(Uri.parse(productImage[position])).into(imageProduct);
 
-        class updateQuantityTask extends AsyncTask<String, Void, Void>{
+        class updateQuantityTask extends AsyncTask<String, Void, Boolean>{
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -63,25 +68,29 @@ public class CustomCartList extends ArrayAdapter {
             }
 
             @Override
-            protected Void doInBackground(String... strings) {
+            protected Boolean doInBackground(String... strings) {
+                boolean done = false;
                 try {
-                    new DBHelper().updateItemQuantity(strings[0], strings[1]);
+                    done = DBHelper.getInstance().updateItemQuantity(strings[0], strings[1]);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                return null;
+                return done;
             }
 
             @Override
-            protected void onPostExecute(Void unused) {
+            protected void onPostExecute(Boolean done) {
+                if(done){
+                    Toast.makeText(context, "Updated Quantity!", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(context, "Failed to update quantity", Toast.LENGTH_SHORT).show();
+                }
                 notifyDataSetChanged();
                 progressDialog.dismiss();
-                Toast.makeText(context, "Updated Quantity!", Toast.LENGTH_SHORT).show();
-
             }
         }
 
-        class deleteCartItem extends AsyncTask<String, Void, Void>{
+        class deleteCartItemTask extends AsyncTask<String, Void, Boolean>{
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -89,22 +98,27 @@ public class CustomCartList extends ArrayAdapter {
             }
 
             @Override
-            protected Void doInBackground(String... strings) {
+            protected Boolean doInBackground(String... strings) {
+                boolean done = false;
                 try {
-                    new DBHelper().deleteCartItem(strings[0]);
+                    done = DBHelper.getInstance().deleteCartItem(strings[0]);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                return null;
+                return done;
             }
 
             @Override
-            protected void onPostExecute(Void unused) {
-
-                notifyDataSetChanged();
+            protected void onPostExecute(Boolean done) {
+                if(done){
+                    Toast.makeText(context, "Item Deleted!", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(context, "Failed to delete item", Toast.LENGTH_SHORT).show();
+                }
+                CartPageFragment cartPageFragment = new CartPageFragment();
+                FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.store_fragment, cartPageFragment).commit();
                 progressDialog.dismiss();
-
-                Toast.makeText(context, "Item Deleted!", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -112,13 +126,8 @@ public class CustomCartList extends ArrayAdapter {
             @Override
             public void onClick(View view) {
 
-                new deleteCartItem().execute(productName[position]);
+                new deleteCartItemTask().execute(productName[position]);
 
-//                productName = ArrayUtils.remove(productName,position);
-//                productPrice = ArrayUtils.remove(productPrice,position);
-//                productQuantity = ArrayUtils.remove(productQuantity,position);
-//                productImage =ArrayUtils.remove(productImage,position);
-                notifyDataSetChanged();
             }
         });
 
