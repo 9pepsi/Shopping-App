@@ -6,13 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/splash_bg"
-    android:scaleY="1.005">
+    android:scaleY="1.005"
+    android:orientation="vertical">
 
     <fragment
         android:id="@+id/map"
         android:name="com.tomtom.online.sdk.map.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
         android:padding="10dp"
         map:uiZoomControls="true"
         map:uiRotateGestures="true"
@@ -20,4 +23,18 @@
         tomtom:mapsApiKey="BmZwNYH2ZCio8OzotAg0KHl8iyOYe7u3"
         tomtom:trafficApiKey="BmZwNYH2ZCio8OzotAg0KHl8iyOYe7u3"
         tools:context=".MapsActivity" />
+
+    <ImageButton
+        android:id="@+id/get_location_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_background"
+        android:backgroundTint="@color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:padding="10dp"
+        android:layout_marginStart="5sp"
+        android:layout_marginBottom="20sp"
+        android:src="@drawable/ic_baseline_my_location_24"
+        android:textColor="#ffffff" />
 </RelativeLayout>

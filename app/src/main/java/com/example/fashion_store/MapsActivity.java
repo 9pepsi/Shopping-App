@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.fashion_store.databinding.ActivityMapsBinding;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.tomtom.online.sdk.common.location.LatLng;
 import com.tomtom.online.sdk.map.CameraPosition;
 import com.tomtom.online.sdk.map.MapFragment;
@@ -24,6 +27,8 @@ public class MapsActivity extends FragmentActivity implements com.tomtom.online.
     private TomtomMap map;
     private ActivityMapsBinding binding;
 
+
+    ImageButton setLocationBT;
     String userAddress;
 
     @Override
@@ -41,6 +46,25 @@ public class MapsActivity extends FragmentActivity implements com.tomtom.online.
         if(mapFragment != null) {
             mapFragment.getAsyncMap(this);
         }
+
+        setLocationBT = this.findViewById(R.id.get_location_bt);
+
+        setLocationBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(map != null){
+                    GPSTracker gpsTracker = new GPSTracker(MapsActivity.this);
+                    gpsTracker.getLocation();
+
+                    SimpleMarkerBalloon balloon = new SimpleMarkerBalloon("Current Location");
+                    LatLng current_location = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
+
+                    map.clear();
+                    map.addMarker(new MarkerBuilder(current_location).markerBalloon(balloon));
+                    map.centerOn(CameraPosition.builder().focusPosition(current_location).zoom(15.0).build());
+                }
+            }
+        });
     }
 
     @Override
@@ -50,8 +74,9 @@ public class MapsActivity extends FragmentActivity implements com.tomtom.online.
         // Add a marker in address and move the camera
         LatLng shippingAddress = getLocationFromAddress(this, userAddress);
         SimpleMarkerBalloon balloon = new SimpleMarkerBalloon(userAddress);
-        map.addMarker(new MarkerBuilder(shippingAddress).markerBalloon(balloon));
-        map.centerOn(CameraPosition.builder().focusPosition(shippingAddress).zoom(15.0).build());
+        tomtomMap.setMyLocationEnabled(true);
+        tomtomMap.addMarker(new MarkerBuilder(shippingAddress).markerBalloon(balloon));
+        tomtomMap.centerOn(CameraPosition.builder().focusPosition(shippingAddress).zoom(15.0).build());
     }
 
     public LatLng getLocationFromAddress(Context context, String strAddress) {

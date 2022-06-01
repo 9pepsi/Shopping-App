@@ -58,7 +58,7 @@ public class ProductPageActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Boolean done) {
                 if(done){
-                    Toast.makeText(ProductPageActivity.this, "Added to Cart!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ProductPageActivity.this, "Added to Cart!", Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(ProductPageActivity.this, "Failed to add product", Toast.LENGTH_LONG).show();
                 }

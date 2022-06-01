@@ -125,7 +125,6 @@ public class OrderHistoryActivity extends AppCompatActivity {
                 orangeDate.setText(ordersDate[0]);
                 greenDate.setText(ordersDate[1]);
 
-                Toast.makeText(OrderHistoryActivity.this, Float.toString(overallPaid), Toast.LENGTH_LONG).show();
                 pieChart.startAnimation();
 
                 progressDialog.dismiss();
