@@ -54,9 +54,7 @@ public class StoreSearchProductsActivity extends AppCompatActivity {
                     productsData = new String[categoryProducts.length][5];
 
                     for (int i = 0; i < categoryProducts.length; i++){
-                        for (int j = 0; j< categoryProducts[i].length;j++){
-                            productsData[i][j] = categoryProducts[i][j];
-                        }
+                        System.arraycopy(categoryProducts[i], 0, productsData[i], 0, categoryProducts[i].length);
                     }
 
                 } catch (SQLException e) {
@@ -107,9 +105,7 @@ public class StoreSearchProductsActivity extends AppCompatActivity {
                     productsData = new String[productsQueryData.length][5];
 
                     for (int i = 0; i < productsQueryData.length; i++){
-                        for (int j = 0; j< productsQueryData[i].length;j++){
-                            productsData[i][j] = productsQueryData[i][j];
-                        }
+                        System.arraycopy(productsQueryData[i], 0, productsData[i], 0, productsQueryData[i].length);
                     }
 
                 } catch (SQLException e) {
@@ -156,9 +152,7 @@ public class StoreSearchProductsActivity extends AppCompatActivity {
 
         productList.setOnItemClickListener((adapterView, view, position, l) -> {
             String[] productData = new String[5];
-            for (int d = 0; d < productData.length; d++){
-                productData[d] = productsData[position][d];
-            }
+            System.arraycopy(productsData[position], 0, productData, 0, productData.length);
             Intent intent = new Intent(StoreSearchProductsActivity.this, ProductPageActivity.class);
             intent.putExtra("product_data", productData);
             startActivity(intent);

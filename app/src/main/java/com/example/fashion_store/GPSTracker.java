@@ -1,24 +1,14 @@
 package com.example.fashion_store;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.Settings;
-import android.util.Log;
 
 import timber.log.Timber;
 
@@ -50,14 +40,11 @@ public class GPSTracker extends Service implements LocationListener {
     double latitude;
     double longitude;
 
-    // How many Geocoder should return our GPSTracker
-    int geocoderMaxResults = 1;
-
     // The minimum distance to change updates in meters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60; // 1 minute
 
     // Declaring a Location Manager
     protected LocationManager locationManager;
@@ -159,7 +146,6 @@ public class GPSTracker extends Service implements LocationListener {
     /**
      * GPSTracker longitude getter and setter
      *
-     * @return
      */
     public double getLongitude() {
         if (location != null) {
@@ -167,26 +153,6 @@ public class GPSTracker extends Service implements LocationListener {
         }
 
         return longitude;
-    }
-
-    /**
-     * GPSTracker isGPSTrackingEnabled getter.
-     * Check GPS/wifi is enabled
-     */
-    public boolean getIsGPSTrackingEnabled() {
-
-        return this.isGPSTrackingEnabled;
-    }
-
-    /**
-     * Stop using GPS listener
-     * Calling this method will stop using GPS in your app
-     */
-    @SuppressLint("MissingPermission")
-    public void stopUsingGPS() {
-        if (locationManager != null) {
-            locationManager.removeUpdates(GPSTracker.this);
-        }
     }
 
     @Override

@@ -5,14 +5,12 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.fashion_store.databinding.ActivityMapsBinding;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.tomtom.online.sdk.common.location.LatLng;
 import com.tomtom.online.sdk.map.CameraPosition;
 import com.tomtom.online.sdk.map.MapFragment;
@@ -25,7 +23,6 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements com.tomtom.online.sdk.map.OnMapReadyCallback {
 
     private TomtomMap map;
-    private ActivityMapsBinding binding;
 
 
     ImageButton setLocationBT;
@@ -38,7 +35,7 @@ public class MapsActivity extends FragmentActivity implements com.tomtom.online.
         Intent getAddress = getIntent();
         userAddress = getAddress.getStringExtra("address");
 
-        binding = ActivityMapsBinding.inflate(getLayoutInflater());
+        com.example.fashion_store.databinding.ActivityMapsBinding binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -49,20 +46,17 @@ public class MapsActivity extends FragmentActivity implements com.tomtom.online.
 
         setLocationBT = this.findViewById(R.id.get_location_bt);
 
-        setLocationBT.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(map != null){
-                    GPSTracker gpsTracker = new GPSTracker(MapsActivity.this);
-                    gpsTracker.getLocation();
+        setLocationBT.setOnClickListener(view -> {
+            if(map != null){
+                GPSTracker gpsTracker = new GPSTracker(MapsActivity.this);
+                gpsTracker.getLocation();
 
-                    SimpleMarkerBalloon balloon = new SimpleMarkerBalloon("Current Location");
-                    LatLng current_location = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
+                SimpleMarkerBalloon balloon = new SimpleMarkerBalloon("Current Location");
+                LatLng current_location = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
 
-                    map.clear();
-                    map.addMarker(new MarkerBuilder(current_location).markerBalloon(balloon));
-                    map.centerOn(CameraPosition.builder().focusPosition(current_location).zoom(15.0).build());
-                }
+                map.clear();
+                map.addMarker(new MarkerBuilder(current_location).markerBalloon(balloon));
+                map.centerOn(CameraPosition.builder().focusPosition(current_location).zoom(15.0).build());
             }
         });
     }

@@ -1,14 +1,12 @@
 package com.example.fashion_store;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.text.DecimalFormat;
 
 public class CustomOrderSummaryList extends ArrayAdapter<String> {
     private String[] productNames;
@@ -49,6 +47,7 @@ public class CustomOrderSummaryList extends ArrayAdapter<String> {
         return  row;
     }
 
+    @SuppressLint("DefaultLocale")
     String roundOffTo2DecPlaces(float val)
     {
         return String.format("%.2f", val);

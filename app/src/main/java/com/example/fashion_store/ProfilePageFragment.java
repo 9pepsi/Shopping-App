@@ -4,25 +4,23 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Objects;
 
 
 public class ProfilePageFragment extends Fragment {
 
-    String[] userData = new String[4];
     TextView userName;
     TextView userEmail;
     Button trackOrderBT;
@@ -74,45 +72,32 @@ public class ProfilePageFragment extends Fragment {
 
             @Override
             protected void onPostExecute(String[] userData) {
+                if(userData[0] != null){
                 //set profile name
-                String name = userName.getText().toString().replace("{USER}", userData[1].concat("!"));
+                String name = Objects.requireNonNull(userName).getText().toString().replace("{USER}", userData[1].concat("!"));
                 userName.setText(name);
                 //set profile email
-                String email = userEmail.getText().toString().replace("{EMAIL}", userData[0]);
+                String email = Objects.requireNonNull(userEmail).getText().toString().replace("{EMAIL}", userData[0]);
                 userEmail.setText(email);
+                }else {
+                    String empty = Objects.requireNonNull(userName).getText().toString().replace("Hi, {USER}", "");
+                    userName.setText(empty);
+                    userEmail.setText("");
+                    Toast.makeText(getContext(), "Failed to fetch user details", Toast.LENGTH_LONG).show();
+                }
 
                 progressDialog.dismiss();
             }
         }
         new getUserInfoTask().execute();
         //track
-        trackOrderBT.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(view.getContext(), TrackOrderActivity.class));
-            }
-        });
+        trackOrderBT.setOnClickListener(view1 -> startActivity(new Intent(view1.getContext(), TrackOrderActivity.class)));
         //history
-        orderHistoryBT.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(view.getContext(), OrderHistoryActivity.class));
-            }
-        });
+        orderHistoryBT.setOnClickListener(view12 -> startActivity(new Intent(view12.getContext(), OrderHistoryActivity.class)));
         //set Address
-        setAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(view.getContext(), UpdateUserAddressActivity.class));
-            }
-        });
+        setAddress.setOnClickListener(view13 -> startActivity(new Intent(view13.getContext(), UpdateUserAddressActivity.class)));
         //sign out
-        signOutBT.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new StoreDialogs().signOutDialog(view.getContext(), "Are you sure you want to sign out?").show();
-            }
-        });
+        signOutBT.setOnClickListener(view14 -> new StoreDialogs().signOutDialog(view14.getContext(), "Are you sure you want to sign out?").show());
 
         return view;
     }

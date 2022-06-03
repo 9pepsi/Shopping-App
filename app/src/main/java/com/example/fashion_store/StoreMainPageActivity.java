@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -15,7 +13,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class StoreMainPageActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
-    ImageButton mainPageSearch;
 
     FeaturedPageFragment featuredPF = new FeaturedPageFragment();
     CategoriesPageFragment categoriesPF = new CategoriesPageFragment();

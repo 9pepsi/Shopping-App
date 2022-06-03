@@ -3,6 +3,7 @@ package com.example.fashion_store;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -32,6 +33,7 @@ public class ProductPageActivity extends AppCompatActivity {
     Button addToCartBT;
     ProgressDialog progressDialog;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +102,8 @@ public class ProductPageActivity extends AppCompatActivity {
             //quantity button listeners
         incQuantity.setOnClickListener(view -> {
             int quantity = Integer.parseInt(productQuantity.getText().toString());
-            if(quantity == 99){;}
+            if(quantity == 99){
+            }
             else{
                 quantity++;
                 productQuantity.setText(Integer.toString(quantity));
@@ -108,7 +111,8 @@ public class ProductPageActivity extends AppCompatActivity {
         });
         decQuantity.setOnClickListener(view -> {
             int quantity = Integer.parseInt(productQuantity.getText().toString());
-            if (quantity == 1){;}
+            if (quantity == 1){
+            }
             else {
                 quantity--;
                 productQuantity.setText(Integer.toString(quantity));

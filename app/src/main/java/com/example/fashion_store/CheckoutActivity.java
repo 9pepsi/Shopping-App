@@ -1,20 +1,17 @@
 package com.example.fashion_store;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.sql.SQLException;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class CheckoutActivity extends AppCompatActivity {
 
@@ -100,12 +97,7 @@ public class CheckoutActivity extends AppCompatActivity {
         }
         //submit button
         confirmOrder = findViewById(R.id.checkout_submit_bt);
-        confirmOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new ConfirmOrderTask().execute(totalQuantityText, totalOrderText);
-            }
-        });
+        confirmOrder.setOnClickListener(view -> new ConfirmOrderTask().execute(totalQuantityText, totalOrderText));
     }
 
     int toIntegerArrayGetTotalQuantity(String[] array){

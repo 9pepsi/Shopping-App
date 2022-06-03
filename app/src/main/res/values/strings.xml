@@ -41,4 +41,15 @@
     <string name="inc_button">inc_button</string>
     <string name="enter_your_shipping_address">Enter your Shipping address, this address will only be used to Ship you your products.</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="order_summary">ORDER SUMMARY</string>
+    <string name="cash_on_delivery">Cash on Delivery</string>
+    <string name="payment_method">Payment Method:</string>
+    <string name="no_of_items">No. of Items:</string>
+    <string name="submit_order">SUBMIT ORDER</string>
+    <string name="total">Total</string>
+    <string name="order_total">Order Total:</string>
+    <string name="no">No</string>
+    <string name="search_location_bt">Search location bt</string>
+    <string name="orders_from_date_to_date_last_month">Orders From {DATE} to {DATE_LAST_MONTH}</string>
+    <string name="date">{DATE}</string>
 </resources>

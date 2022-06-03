@@ -1,7 +1,6 @@
 package com.example.fashion_store;
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -11,11 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
@@ -23,7 +20,7 @@ import com.squareup.picasso.Picasso;
 
 import java.sql.SQLException;
 
-public class CustomCartList extends ArrayAdapter {
+public class CustomCartList extends ArrayAdapter<String> {
     private String[] productName;
     private String[] productPrice;
     private String[] productImage;
@@ -122,43 +119,30 @@ public class CustomCartList extends ArrayAdapter {
             }
         }
 
-        deleteProduct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        deleteProduct.setOnClickListener(view -> new deleteCartItemTask().execute(productName[position]));
 
-                new deleteCartItemTask().execute(productName[position]);
-
+        increaseQuantity.setOnClickListener(view -> {
+            int quantity = Integer.parseInt(productQuantity[position]);
+            if(quantity < 99){
+                quantity++;
+                new updateQuantityTask().execute(Integer.toString(quantity), productName[position]);
             }
+            String newQuantity = Integer.toString(quantity);
+            productQuantity[position] = newQuantity;
+            productQuantityView.setText(productQuantity[position]);
+            notifyDataSetChanged();
         });
 
-        increaseQuantity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int quantity = Integer.parseInt(productQuantity[position]);
-                if(quantity < 99){
-                    quantity++;
-                    new updateQuantityTask().execute(Integer.toString(quantity), productName[position]);
-                }
-                String newQuantity = Integer.toString(quantity);
-                productQuantity[position] = newQuantity;
-                productQuantityView.setText(productQuantity[position]);
-                notifyDataSetChanged();
+        decreaseQuantity.setOnClickListener(view -> {
+            int quantity = Integer.parseInt(productQuantity[position]);
+            if(quantity > 1){
+                quantity--;
+                new updateQuantityTask().execute(Integer.toString(quantity), productName[position]);
             }
-        });
-
-        decreaseQuantity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int quantity = Integer.parseInt(productQuantity[position]);
-                if(quantity > 1){
-                    quantity--;
-                    new updateQuantityTask().execute(Integer.toString(quantity), productName[position]);
-                }
-                String newQuantity = Integer.toString(quantity);
-                productQuantity[position] = newQuantity;
-                productQuantityView.setText(productQuantity[position]);
-                notifyDataSetChanged();
-            }
+            String newQuantity = Integer.toString(quantity);
+            productQuantity[position] = newQuantity;
+            productQuantityView.setText(productQuantity[position]);
+            notifyDataSetChanged();
         });
 
         return  row;

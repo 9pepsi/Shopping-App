@@ -111,13 +111,10 @@ public class OrderSummaryActivity extends AppCompatActivity {
         new showOrderDetailsTask().execute(orderID);
         new getUserAddressTask().execute();
 
-        trackOrderBT.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(OrderSummaryActivity.this, MapsActivity.class);
-                i.putExtra("address", userAddress);
-                startActivity(i);
-            }
+        trackOrderBT.setOnClickListener(view -> {
+            Intent i = new Intent(OrderSummaryActivity.this, MapsActivity.class);
+            i.putExtra("address", userAddress);
+            startActivity(i);
         });
     }
 }

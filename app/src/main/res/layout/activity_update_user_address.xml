@@ -75,7 +75,8 @@
                     android:gravity="center"
                     android:background="@drawable/button_background"
                     android:hint="Enter Home Address"
-                    android:backgroundTint="@color/white"/>
+                    android:backgroundTint="@color/white"
+                    android:inputType="textPostalAddress" />
             </com.google.android.material.card.MaterialCardView>
 
             <Button

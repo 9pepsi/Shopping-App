@@ -1,21 +1,21 @@
 package com.example.fashion_store;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
-import org.apache.commons.lang3.ArrayUtils;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import java.sql.SQLException;
 
 public class CartPageFragment extends Fragment {
@@ -32,6 +32,7 @@ public class CartPageFragment extends Fragment {
     String[] productImages;
     String[] productQuantities;
 
+    @SuppressLint("StaticFieldLeak")
     class checkUserCart extends AsyncTask<Void, Void, String[][]>{
         @Override
         protected void onPreExecute() {
@@ -52,7 +53,7 @@ public class CartPageFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String[][] productCart) {
-            if(productCart.length > 0) {
+            if(!(productCart == null) && productCart.length > 0) {
                  productNames = new String[productCart.length];
                  productPrices = new String[productCart.length];
                  productImages = new String[productCart.length];
@@ -70,7 +71,7 @@ public class CartPageFragment extends Fragment {
                 cartList.setAdapter(customCartList);
             }else {
                 EmptyCartPageFragment emptyCartPageFragment = new EmptyCartPageFragment();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.store_fragment, emptyCartPageFragment).commit();
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.store_fragment, emptyCartPageFragment).commit();
             }
 
 
@@ -98,20 +99,15 @@ public class CartPageFragment extends Fragment {
         swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
         checkoutButton = view.findViewById(R.id.cart_checkout_bt);
 
-        checkoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), CheckoutActivity.class);
-                intent.putExtra("order_product_names", productNames);
-                intent.putExtra("order_product_prices", productPrices);
-                intent.putExtra("order_product_quantities", productQuantities);
-                startActivity(intent);
-            }
+        checkoutButton.setOnClickListener(view -> {
+            Intent intent = new Intent(view.getContext(), CheckoutActivity.class);
+            intent.putExtra("order_product_names", productNames);
+            intent.putExtra("order_product_prices", productPrices);
+            intent.putExtra("order_product_quantities", productQuantities);
+            startActivity(intent);
         });
 
-        onRefreshListener = () -> {
-            new checkUserCart().execute();
-        };
+        onRefreshListener = () -> new checkUserCart().execute();
         swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
 
 

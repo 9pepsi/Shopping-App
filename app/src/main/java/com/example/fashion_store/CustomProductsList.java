@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-public class CustomProductsList extends ArrayAdapter {
+public class CustomProductsList extends ArrayAdapter<String> {
     private String[] productName;
     private String[] productPrice;
     private String[] productImage;

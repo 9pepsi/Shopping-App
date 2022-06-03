@@ -1,8 +1,5 @@
 package com.example.fashion_store;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -10,9 +7,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.apache.commons.lang3.ArrayUtils;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
 

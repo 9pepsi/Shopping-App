@@ -1,17 +1,13 @@
 package com.example.fashion_store;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.sql.SQLException;
 
@@ -59,12 +55,9 @@ public class UpdateUserAddressActivity extends AppCompatActivity {
             }
         }
 
-        updateAddressBT.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String address = addressText.getText().toString();
-                new updateAddressTask().execute(address);
-            }
+        updateAddressBT.setOnClickListener(view -> {
+            String address = addressText.getText().toString();
+            new updateAddressTask().execute(address);
         });
     }
 }

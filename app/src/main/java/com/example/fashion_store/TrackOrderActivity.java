@@ -1,14 +1,12 @@
 package com.example.fashion_store;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.sql.SQLException;
 
@@ -72,15 +70,12 @@ public class TrackOrderActivity extends AppCompatActivity {
 
         new getUserOrdersTask().execute();
 
-        trackOrdersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent i = new Intent(TrackOrderActivity.this, OrderSummaryActivity.class);
-                i.putExtra("order_id", ordersID[position]);
-                i.putExtra("order_quantity", ordersQuantity[position]);
-                i.putExtra("order_total_price", ordersPrice[position]);
-                startActivity(i);
-            }
+        trackOrdersList.setOnItemClickListener((adapterView, view, position, l) -> {
+            Intent i = new Intent(TrackOrderActivity.this, OrderSummaryActivity.class);
+            i.putExtra("order_id", ordersID[position]);
+            i.putExtra("order_quantity", ordersQuantity[position]);
+            i.putExtra("order_total_price", ordersPrice[position]);
+            startActivity(i);
         });
     }
 }
