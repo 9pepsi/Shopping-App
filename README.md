@@ -1,5 +1,4 @@
 # Shopping-App
-Android Shopping App
 Simple Shopping app for android that includes:
 - Login System
 - Product Page
